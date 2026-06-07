@@ -1,4 +1,5 @@
 """API routes for the Investment Research Wizard."""
+import threading
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
@@ -11,6 +12,8 @@ from src.agents.fisher_agent import PhilipFisherAgent
 from src.agents.sentiment_agent import SentimentAgent
 from src.agents.unicorn_detector import UnicornDetectorAgent
 from src.agents.daily_report import DailyReportOrchestrator
+from src.agents.universe_scan import UniverseScanOrchestrator
+from src.api import job_store
 from src.utils.config import get_config
 from src.utils.logger import get_logger
 
@@ -284,3 +287,137 @@ def daily_report(body: DailyReportRequest) -> Dict[str, Any]:
     except Exception as exc:
         logger.error("Daily report failed: %s", exc)
         raise HTTPException(status_code=500, detail="Daily report generation failed")
+
+
+# ------------------------------------------------------------------
+# Universe Scan endpoints (async — NSE/BSE full scan)
+# ------------------------------------------------------------------
+
+class UniverseScanRequest(BaseModel):
+    symbol_list: Optional[List[str]] = Field(
+        None,
+        description="Override list of NSE symbols. If omitted, fetches from NSE API (NIFTY 500).",
+    )
+    stage1_top_n: int = Field(
+        100,
+        ge=10,
+        le=500,
+        description="How many candidates to pass Stage 1 screening. Default: 100.",
+    )
+    stage2_top_n: int = Field(
+        50,
+        ge=5,
+        le=200,
+        description="How many to run the full 9-agent pipeline on. Lower = faster. Default: 50.",
+    )
+
+
+def _run_scan_background(job_id: str, request_params: Dict[str, Any]):
+    """Background thread worker for universe scan."""
+    job_store.start_job(job_id)
+    try:
+        scanner = UniverseScanOrchestrator(config=cfg)
+
+        def progress(stage, done, total, message=""):
+            job_store.update_progress(job_id, stage, done, total, message)
+
+        result = scanner.run(
+            symbol_list=request_params.get("symbol_list"),
+            stage1_top_n=request_params.get("stage1_top_n", 100),
+            stage2_top_n=request_params.get("stage2_top_n", 50),
+            progress_callback=progress,
+        )
+        job_store.complete_job(job_id, result)
+        logger.info("Universe scan job %s complete", job_id)
+    except Exception as exc:
+        logger.error("Universe scan job %s failed: %s", job_id, exc)
+        job_store.fail_job(job_id, str(exc))
+
+
+@router.post(
+    "/scan/universe",
+    summary="Start a full NSE/BSE universe scan (async) — returns job_id to poll",
+)
+def start_universe_scan(body: UniverseScanRequest) -> Dict[str, Any]:
+    """
+    Kicks off a full two-stage universe scan in the background.
+
+    Stage 1: Fast quantitative screener across NSE universe (rule-based, no LLM).
+    Stage 2: Full 9-agent research pipeline on top candidates.
+    Output: Top 10 per category — Buffett, Lynch, Fisher, Growth, Small Cap,
+            Emerging Themes, Dividend, Stocks to Avoid.
+
+    Returns a job_id immediately. Poll GET /scan/universe/{job_id} for results.
+    Typical duration: 10-45 minutes depending on stage2_top_n and LLM availability.
+    """
+    params = body.model_dump()
+    job_id = job_store.create_job(job_type="universe_scan", params={
+        "stage1_top_n": params["stage1_top_n"],
+        "stage2_top_n": params["stage2_top_n"],
+        "symbol_count": len(params.get("symbol_list") or []),
+    })
+
+    thread = threading.Thread(
+        target=_run_scan_background,
+        args=(job_id, params),
+        daemon=True,
+        name=f"scan-{job_id[:8]}",
+    )
+    thread.start()
+
+    return {
+        "job_id": job_id,
+        "status": "pending",
+        "message": (
+            f"Scan started. Stage 1 will screen the NSE universe, "
+            f"Stage 2 will deeply analyse top {params['stage2_top_n']} candidates. "
+            f"Poll GET /api/v1/scan/universe/{job_id} for progress and results."
+        ),
+        "poll_url": f"/api/v1/scan/universe/{job_id}",
+    }
+
+
+@router.get(
+    "/scan/universe/{job_id}",
+    summary="Get universe scan job status and results",
+)
+def get_universe_scan(job_id: str) -> Dict[str, Any]:
+    """
+    Poll this endpoint after starting a scan with POST /scan/universe.
+
+    Response includes:
+    - status: pending | running | complete | failed
+    - progress: stage, done/total, pct, message
+    - result: full scan report (only when status=complete)
+    """
+    job = job_store.get_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+
+    response: Dict[str, Any] = {
+        "job_id": job["job_id"],
+        "status": job["status"],
+        "created_at": job["created_at"],
+        "started_at": job.get("started_at"),
+        "completed_at": job.get("completed_at"),
+        "progress": job["progress"],
+    }
+
+    if job["status"] == "failed":
+        response["error"] = job.get("error")
+    elif job["status"] == "complete":
+        response["result"] = job["result"]
+
+    return response
+
+
+@router.get(
+    "/scan/jobs",
+    summary="List recent universe scan jobs",
+)
+def list_scan_jobs(limit: int = Query(20, ge=1, le=50)) -> Dict[str, Any]:
+    """Returns recent scan jobs (newest first) without the full result payload."""
+    return {
+        "jobs": job_store.list_jobs(limit=limit),
+        "note": "Poll GET /api/v1/scan/universe/{job_id} to get full results for a completed job.",
+    }
