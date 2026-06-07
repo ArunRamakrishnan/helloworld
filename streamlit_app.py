@@ -1,11 +1,14 @@
 """Indian Investment Research Wizard — Streamlit Dashboard."""
 import json
+import time
 from typing import Any, Dict, List
 
 import streamlit as st
 
 from src.agents.orchestrator import Orchestrator
 from src.agents.daily_report import DailyReportOrchestrator
+from src.agents.universe_scan import UniverseScanOrchestrator
+from src.agents.universe_screener import NIFTY100_FALLBACK
 from src.utils.config import get_config
 
 st.set_page_config(
@@ -349,6 +352,157 @@ def _render_morning_report(report: Dict[str, Any]):
         st.json(report)
 
 
+def page_universe_scanner():
+    st.header("🌏 NSE/BSE Universe Scanner")
+    st.markdown(DISCLAIMER)
+    st.divider()
+
+    st.info(
+        "Scans the NSE universe in two stages:\n"
+        "1. **Stage 1** — Fast rule-based filter (ROE, D/E, revenue, FCF) across all stocks\n"
+        "2. **Stage 2** — Full 9-agent research pipeline on top candidates\n\n"
+        "Output: **Top 10 per category** — Buffett · Lynch · Fisher · Growth · Small Cap · "
+        "Emerging Themes · Dividend · Avoid"
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        stage1_n = st.slider("Stage 1 candidates (pre-filter output)", 20, 200, 100, step=10)
+        stage2_n = st.slider("Stage 2 deep analysis count", 10, 100, 30, step=5,
+                              help="Lower = faster. Each stock runs 4 LLM calls.")
+    with col2:
+        custom_symbols = st.text_area(
+            "Custom symbol list (optional, one per line)",
+            placeholder="Leave blank to use NSE NIFTY 500\nOr enter:\nRELIANCE\nTCS\nINFY",
+            height=120,
+        )
+        st.caption(f"Default covers {len(NIFTY100_FALLBACK)} symbols (NIFTY 100 + mid/small caps)")
+
+    est_mins = max(2, stage2_n * 0.3)
+    st.caption(f"Estimated duration: ~{est_mins:.0f}–{est_mins*2:.0f} minutes")
+
+    if st.button("🚀 Start Universe Scan", use_container_width=True, type="primary"):
+        symbol_list = None
+        if custom_symbols.strip():
+            symbol_list = [s.strip().upper() for s in custom_symbols.strip().splitlines() if s.strip()]
+            st.caption(f"Using {len(symbol_list)} custom symbols")
+
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+
+        def progress_cb(stage, done, total, message=""):
+            pct = int(done / total * 100) if total > 0 else 0
+            progress_bar.progress(pct)
+            status_text.caption(f"[{stage.upper()}] {message} ({done}/{total})")
+
+        with st.spinner("Running universe scan..."):
+            try:
+                scanner = UniverseScanOrchestrator(config=get_config())
+                result = scanner.run(
+                    symbol_list=symbol_list,
+                    stage1_top_n=stage1_n,
+                    stage2_top_n=stage2_n,
+                    progress_callback=progress_cb,
+                )
+                progress_bar.progress(100)
+                status_text.success("Scan complete!")
+                _render_universe_report(result)
+            except Exception as exc:
+                st.error(f"Scan failed: {exc}")
+
+
+def _render_universe_report(result: Dict[str, Any]):
+    stats = result.get("scan_stats", {})
+    st.divider()
+
+    # Stats row
+    col1, col2, col3, col4, col5 = st.columns(5)
+    col1.metric("Symbols Scanned", stats.get("symbols_scanned", 0))
+    col2.metric("Passed Filter", stats.get("passed_prefilter", 0))
+    col3.metric("Deep Analysed", stats.get("deep_analysed", 0))
+    col4.metric("Strong Candidates", stats.get("strong_candidates", 0))
+    col5.metric("Duration", f"{result.get('duration_seconds', 0):.0f}s")
+
+    st.divider()
+
+    categories = [
+        ("🏦 Top 10 Buffett Stocks", "top10_buffett", "High ROE · Strong Moat · Low Debt · Positive FCF"),
+        ("📈 Top 10 Peter Lynch Stocks", "top10_lynch", "PEG < 1 · Consistent Earnings Growth · Sector Leadership"),
+        ("🔭 Top 10 Philip Fisher Stocks", "top10_fisher", "Innovation · Management Vision · Future Monopoly · 10x Potential"),
+        ("🚀 Top 10 Growth Stocks", "top10_growth", "High Revenue & Profit CAGR · Expanding Markets"),
+        ("🦄 Top 10 Small Cap Opportunities", "top10_small_cap", "Market Cap < ₹5,000 Cr · Founder-led · High Growth"),
+        ("🌱 Top 10 Emerging Theme Stocks", "top10_emerging_themes", "Defense · AI · EV · Renewables · Fintech"),
+        ("💰 Top 10 Dividend Stocks", "top10_dividend", "High Yield · Consistent Payer · Low Risk"),
+    ]
+
+    for title, key, subtitle in categories:
+        picks = result.get(key, [])
+        st.subheader(title)
+        st.caption(subtitle)
+        if not picks:
+            st.caption("No qualifying stocks found in this category.")
+            st.divider()
+            continue
+
+        # Table view
+        table_data = []
+        for i, p in enumerate(picks, 1):
+            m = p.get("key_metrics", {})
+            table_data.append({
+                "#": i,
+                "Ticker": p["ticker"],
+                "Name": (p.get("name") or "")[:25],
+                "Sector": (p.get("sector") or "")[:20],
+                "Rating": p.get("final_rating", "—"),
+                "Score": p.get("score", 0),
+                "P/E": fmt(m.get("pe_ratio")),
+                "ROE%": f"{m.get('roe_pct', 0):.1f}",
+                "Rev CAGR%": f"{m.get('revenue_cagr_3y_pct', 0):.1f}",
+                "Risk": fmt(m.get("risk_score"), 1),
+                "10x?": "✨" if (m.get("ten_x_potential") or m.get("ten_x_candidate")) else "",
+            })
+        st.dataframe(table_data, use_container_width=True)
+
+        # Expandable details for each pick
+        for p in picks[:3]:  # show detail expanders for top 3
+            with st.expander(f"📋 {p['ticker']} — {p.get('name', '')}"):
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.write("**Synopsis:**", p.get("synopsis", "—"))
+                    st.write("**Bull Case:**")
+                    for b in p.get("bull_case", []):
+                        st.write(f"• {b}")
+                with c2:
+                    st.write("**Bear Case:**")
+                    for b in p.get("bear_case", []):
+                        st.write(f"• {b}")
+                    if p.get("red_flags"):
+                        st.error("Red flags: " + ", ".join(p["red_flags"]))
+                    if p.get("watch_triggers"):
+                        st.info("Watch for: " + " · ".join(p["watch_triggers"]))
+        st.divider()
+
+    # Avoid list
+    st.subheader("🚫 Top 10 Stocks to Avoid")
+    avoid = result.get("top10_avoid", [])
+    if avoid:
+        for p in avoid:
+            flags = ", ".join(p.get("red_flags") or []) or "Multiple risk factors"
+            with st.expander(f"🔴 {p['ticker']} — Risk Score: {p.get('key_metrics', {}).get('risk_score', '?')} | {flags}"):
+                for b in p.get("bear_case", []):
+                    st.write(f"• {b}")
+    else:
+        st.caption("No high-risk stocks flagged.")
+
+    st.divider()
+    st.info(result.get("portfolio_rebalancing_note", ""))
+    st.caption(f"Data sources: {', '.join(result.get('data_sources', []))}")
+    st.caption(result.get("data_source_note", ""))
+
+    with st.expander("📊 Full Scan JSON"):
+        st.json({k: v for k, v in result.items() if k != "all_reports_summary"})
+
+
 def page_about():
     st.header("ℹ️ About the Investment Research Wizard")
     st.markdown("""
@@ -395,7 +549,7 @@ st.sidebar.caption("NSE/BSE · AI-Powered · Paper Trading")
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Single Stock Research", "Morning Report", "About"],
+    ["Single Stock Research", "Morning Report", "Universe Scanner", "About"],
     index=0,
 )
 
@@ -407,5 +561,7 @@ if page == "Single Stock Research":
     page_single_stock()
 elif page == "Morning Report":
     page_morning_report()
+elif page == "Universe Scanner":
+    page_universe_scanner()
 else:
     page_about()

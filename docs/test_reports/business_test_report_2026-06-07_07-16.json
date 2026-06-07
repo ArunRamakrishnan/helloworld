@@ -1,0 +1,593 @@
+{
+  "generated_at": "2026-06-07T07:16:47.467720",
+  "summary": {
+    "total": 44,
+    "passed": 41,
+    "failed": 3,
+    "skipped": 0
+  },
+  "by_category": {
+    "General": [
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_parse_info_converts_units_correctly",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_passes_good_stock",
+        "status": "FAILED",
+        "duration_ms": 0.2,
+        "error": "E   assert False"
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_micro_cap",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_penny_stock",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_no_revenue",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_bad_roe",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_high_de_financial_sector_exempt",
+        "status": "FAILED",
+        "duration_ms": 0.2,
+        "error": "E   assert False"
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_quant_score_high_quality_stock",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_with_mocked_fetch",
+        "status": "FAILED",
+        "duration_ms": 2.2,
+        "error": "E    +  where 0 = len([])"
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_all_fetch_failures",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_progress_callback",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_get_symbol_list_fallback",
+        "status": "PASSED",
+        "duration_ms": 62.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_nifty100_fallback_not_empty",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_parse_info_missing_fields_handled",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_candidates_sorted_by_composite_score",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_returns_error_on_fetch_failure",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_pct_change_calculation",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_earnings_quality_score_strong_growth",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_earnings_quality_score_declining",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_compute_trends_yoy",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_safe_cr_returns_none_on_bad_df",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_create_and_get_job",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_start_job",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_complete_job",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_fail_job",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_update_progress",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_get_nonexistent_job",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_list_jobs_returns_recent",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_list_jobs_no_result_payload",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_thread_safety",
+        "status": "PASSED",
+        "duration_ms": 6.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestJobStore::test_job_returns_copy_not_reference",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      }
+    ],
+    "Risk Detection": [
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_quant_score_risky_stock",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      }
+    ],
+    "Data Collection": [
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_with_mock_data",
+        "status": "PASSED",
+        "duration_ms": 9742.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_empty_dataframe",
+        "status": "PASSED",
+        "duration_ms": 0.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_compute_trends_insufficient_data",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      }
+    ],
+    "Research Orchestration": [
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_produces_all_category_keys",
+        "status": "PASSED",
+        "duration_ms": 63.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_stats_populated",
+        "status": "PASSED",
+        "duration_ms": 51.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_handles_orchestrator_failure",
+        "status": "PASSED",
+        "duration_ms": 48.9,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_progress_callback_called",
+        "status": "PASSED",
+        "duration_ms": 67.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_enriches_report_with_earnings_data",
+        "status": "PASSED",
+        "duration_ms": 50.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_lynch_scoring",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_lynch_high_peg_scores_lower",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_pick_top10_returns_max_10",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_pick_top10_structure",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      }
+    ]
+  },
+  "all_results": [
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_parse_info_converts_units_correctly",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_passes_good_stock",
+      "category": "General",
+      "status": "FAILED",
+      "duration_ms": 0.2,
+      "error": "E   assert False"
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_micro_cap",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_penny_stock",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_no_revenue",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_rejects_bad_roe",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_prefilter_high_de_financial_sector_exempt",
+      "category": "General",
+      "status": "FAILED",
+      "duration_ms": 0.2,
+      "error": "E   assert False"
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_quant_score_high_quality_stock",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_quant_score_risky_stock",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_with_mocked_fetch",
+      "category": "General",
+      "status": "FAILED",
+      "duration_ms": 2.2,
+      "error": "E    +  where 0 = len([])"
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_all_fetch_failures",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_progress_callback",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_get_symbol_list_fallback",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 62.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_nifty100_fallback_not_empty",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_parse_info_missing_fields_handled",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_candidates_sorted_by_composite_score",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_with_mock_data",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 9742.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_returns_error_on_fetch_failure",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_empty_dataframe",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_pct_change_calculation",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_earnings_quality_score_strong_growth",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_earnings_quality_score_declining",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_compute_trends_insufficient_data",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_compute_trends_yoy",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_safe_cr_returns_none_on_bad_df",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_produces_all_category_keys",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 63.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_stats_populated",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 51.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_handles_orchestrator_failure",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 48.9,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_progress_callback_called",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 67.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_enriches_report_with_earnings_data",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 50.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_lynch_scoring",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_lynch_high_peg_scores_lower",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_pick_top10_returns_max_10",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_pick_top10_structure",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_create_and_get_job",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_start_job",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_complete_job",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_fail_job",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_update_progress",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_get_nonexistent_job",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_list_jobs_returns_recent",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_list_jobs_no_result_payload",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_thread_safety",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 6.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_universe_scan.py::TestJobStore::test_job_returns_copy_not_reference",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    }
+  ]
+}
