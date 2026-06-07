@@ -25,9 +25,9 @@ DISCLAIMER = (
 # ------------------------------------------------------------------
 
 class ResearchRequest(BaseModel):
-    ticker: str = Field(..., example="RELIANCE")
-    current_price: float = Field(..., gt=0, example=2850.50)
-    market_cap_cr: float = Field(..., gt=0, example=1930000)
+    ticker: str = Field(..., json_schema_extra={"example": "RELIANCE"})
+    current_price: float = Field(..., gt=0, json_schema_extra={"example": 2850.50})
+    market_cap_cr: float = Field(..., gt=0, json_schema_extra={"example": 1930000})
     business_description: str = Field(..., min_length=20)
     eps: Optional[float] = None
     book_value_per_share: Optional[float] = None
