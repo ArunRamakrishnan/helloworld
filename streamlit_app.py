@@ -9,6 +9,7 @@ from src.agents.orchestrator import Orchestrator
 from src.agents.daily_report import DailyReportOrchestrator
 from src.agents.universe_scan import UniverseScanOrchestrator
 from src.agents.universe_screener import NIFTY100_FALLBACK
+from src.agents.unicorn_hunter import UnicornHunterAgent, UNICORN_UNIVERSE
 from src.utils.config import get_config
 
 st.set_page_config(
@@ -503,6 +504,130 @@ def _render_universe_report(result: Dict[str, Any]):
         st.json({k: v for k, v in result.items() if k != "all_reports_summary"})
 
 
+def page_unicorn_hunt():
+    st.header("🦄 Unicorn Hunter — Next NIFTY 50 Candidates")
+    st.markdown(DISCLAIMER)
+    st.info(
+        "Scans **300+ undiscovered small/mid-cap stocks** (max ₹15,000 Cr market cap). "
+        "Deliberately **excludes** large-cap household names like TCS, Infosys, HDFC, Reliance. "
+        "Goal: find the next multi-bagger **before** the market discovers it."
+    )
+    st.divider()
+
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        top_n = st.slider("Top N Unicorn Candidates", min_value=5, max_value=50, value=20, step=5)
+    with col2:
+        use_custom = st.checkbox("Use custom symbol list", value=False)
+
+    custom_symbols = None
+    if use_custom:
+        raw = st.text_area(
+            "Custom NSE symbols (one per line)",
+            value="\n".join(["IDEAFORGE", "MTAR", "KAYNES", "WAAREEENER", "LAURUS"]),
+            height=100,
+        )
+        custom_symbols = [s.strip().upper() for s in raw.splitlines() if s.strip()]
+
+    universe_size = len(custom_symbols or UNICORN_UNIVERSE)
+    st.caption(f"Will scan **{universe_size} symbols** across emerging sectors.")
+
+    if st.button("🚀 Start Unicorn Hunt", type="primary"):
+        hunter = UnicornHunterAgent(config=get_config())
+
+        progress_bar = st.progress(0, text="Initialising hunt...")
+        status_text = st.empty()
+
+        def on_progress(done, total):
+            pct_done = done / total if total else 0
+            progress_bar.progress(pct_done, text=f"Scanning {done}/{total} stocks...")
+
+        with st.spinner("Hunting for undiscovered gems..."):
+            result = hunter.hunt(
+                symbol_list=custom_symbols,
+                top_n=top_n,
+                progress_callback=on_progress,
+            )
+
+        progress_bar.progress(1.0, text="Hunt complete!")
+
+        st.success(result.get("hunt_note", "Hunt complete."))
+
+        # Summary metrics
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("Scanned", result["total_scanned"])
+        col2.metric("Passed Filters", result["passed_filter"])
+        col3.metric("Returned", result["candidates_returned"])
+        col4.metric("Fetch Failures", result["fetch_failures"])
+
+        st.divider()
+
+        # Theme breakdown
+        if result.get("theme_breakdown"):
+            st.subheader("🗂️ Candidates by Emerging Theme")
+            theme_data = [
+                {"Theme": theme, "Tickers": ", ".join(tickers[:8]) + ("..." if len(tickers) > 8 else ""), "Count": len(tickers)}
+                for theme, tickers in result["theme_breakdown"].items()
+            ]
+            import pandas as pd
+            st.dataframe(pd.DataFrame(theme_data), use_container_width=True, hide_index=True)
+            st.divider()
+
+        # Candidate rankings
+        if result["candidates"]:
+            st.subheader(f"🏆 Top {len(result['candidates'])} Unicorn Candidates")
+
+            import pandas as pd
+            rows = []
+            for i, c in enumerate(result["candidates"], 1):
+                rows.append({
+                    "#": i,
+                    "Ticker": c["ticker"],
+                    "Name": c.get("name", c["ticker"])[:25],
+                    "Mcap (Cr)": f"₹{c.get('market_cap_cr', 0):,.0f}",
+                    "Rev Growth": pct(c.get("revenue_growth_yoy")),
+                    "ROE": pct(c.get("roe")),
+                    "D/E": fmt(c.get("debt_equity")),
+                    "Themes": ", ".join(c.get("emerging_themes", []))[:40] or "—",
+                    "Composite": f"{c.get('unicorn_composite', 0):.2f}",
+                })
+            st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+            st.divider()
+            st.subheader("🔍 Stock Details")
+            for c in result["candidates"][:10]:
+                with st.expander(f"#{result['candidates'].index(c)+1} {c['ticker']} — {c.get('name', '')} | Score: {c.get('unicorn_composite', 0):.2f}"):
+                    c1, c2, c3 = st.columns(3)
+                    c1.metric("Market Cap", f"₹{c.get('market_cap_cr', 0):,.0f} Cr")
+                    c1.metric("Price", f"₹{c.get('current_price', 0):,.2f}")
+                    c2.metric("Revenue Growth", pct(c.get("revenue_growth_yoy")))
+                    c2.metric("Earnings Growth", pct(c.get("earnings_growth_yoy")))
+                    c3.metric("ROE", pct(c.get("roe")))
+                    c3.metric("Debt/Equity", fmt(c.get("debt_equity")))
+
+                    st.write(f"**Sector:** {c.get('sector', '—')} | **Industry:** {c.get('industry', '—')}")
+                    st.write(f"**Emerging Themes:** {', '.join(c.get('emerging_themes', [])) or 'None detected'}")
+
+                    scores_c1, scores_c2 = st.columns(2)
+                    scores_c1.write(f"Growth Score: {score_bar(c.get('unicorn_growth_score'))}")
+                    scores_c1.write(f"Size Score: {score_bar(c.get('unicorn_size_score'))}")
+                    scores_c1.write(f"Theme Score: {score_bar(c.get('unicorn_theme_score'))}")
+                    scores_c2.write(f"Quality Score: {score_bar(c.get('unicorn_quality_score'))}")
+                    scores_c2.write(f"Valuation Score: {score_bar(c.get('unicorn_valuation_score'))}")
+                    scores_c2.write(f"**Composite: {score_bar(c.get('unicorn_composite'))}**")
+
+                    if c.get("business_description"):
+                        st.caption(c["business_description"][:300])
+        else:
+            st.warning(
+                "No unicorn candidates found. This usually means yfinance couldn't fetch data "
+                "for the symbols, or all were filtered out. Try with a smaller custom list first."
+            )
+
+        st.divider()
+        st.caption(DISCLAIMER.replace("⚠️ **Disclaimer:** ", ""))
+
+
 def page_about():
     st.header("ℹ️ About the Investment Research Wizard")
     st.markdown("""
@@ -549,7 +674,7 @@ st.sidebar.caption("NSE/BSE · AI-Powered · Paper Trading")
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Single Stock Research", "Morning Report", "Universe Scanner", "About"],
+    ["Single Stock Research", "Morning Report", "Universe Scanner", "Unicorn Hunt", "About"],
     index=0,
 )
 
@@ -563,5 +688,7 @@ elif page == "Morning Report":
     page_morning_report()
 elif page == "Universe Scanner":
     page_universe_scanner()
+elif page == "Unicorn Hunt":
+    page_unicorn_hunt()
 else:
     page_about()

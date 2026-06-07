@@ -13,6 +13,7 @@ from src.agents.sentiment_agent import SentimentAgent
 from src.agents.unicorn_detector import UnicornDetectorAgent
 from src.agents.daily_report import DailyReportOrchestrator
 from src.agents.universe_scan import UniverseScanOrchestrator
+from src.agents.unicorn_hunter import UnicornHunterAgent, UNICORN_UNIVERSE
 from src.api import job_store
 from src.utils.config import get_config
 from src.utils.logger import get_logger
@@ -407,6 +408,115 @@ def get_universe_scan(job_id: str) -> Dict[str, Any]:
         response["error"] = job.get("error")
     elif job["status"] == "complete":
         response["result"] = job["result"]
+
+    return response
+
+
+# ------------------------------------------------------------------
+# Unicorn Hunt endpoints (async — small/mid-cap undiscovered gems)
+# ------------------------------------------------------------------
+
+class UnicornHuntRequest(BaseModel):
+    symbol_list: Optional[List[str]] = Field(
+        None,
+        description="Override list of symbols. If omitted, uses built-in 300+ undiscovered small/mid-cap universe.",
+    )
+    top_n: int = Field(
+        30,
+        ge=5,
+        le=100,
+        description="Return top N unicorn candidates. Default: 30.",
+    )
+
+
+def _run_hunt_background(job_id: str, request_params: Dict[str, Any]):
+    """Background thread worker for unicorn hunt."""
+    job_store.start_job(job_id)
+    try:
+        hunter = UnicornHunterAgent(config=cfg)
+
+        def progress(done, total):
+            job_store.update_progress(job_id, "unicorn_hunt", done, total, f"Scanned {done}/{total}")
+
+        result = hunter.hunt(
+            symbol_list=request_params.get("symbol_list"),
+            top_n=request_params.get("top_n", 30),
+            progress_callback=progress,
+        )
+        job_store.complete_job(job_id, result)
+        logger.info("Unicorn hunt job %s complete", job_id)
+    except Exception as exc:
+        logger.error("Unicorn hunt job %s failed: %s", job_id, exc)
+        job_store.fail_job(job_id, str(exc))
+
+
+@router.post(
+    "/scan/unicorns",
+    summary="Hunt for undiscovered unicorns — next NIFTY 50 candidates (async)",
+)
+def start_unicorn_hunt(body: UnicornHuntRequest) -> Dict[str, Any]:
+    """
+    Scans 300+ undiscovered small/mid-cap stocks (max ₹15,000 Cr market cap) to find
+    the next generation of multi-baggers BEFORE the market discovers them.
+
+    Deliberately EXCLUDES large caps and household names like TCS, Infosys, HDFC.
+    Focus: defense, EMS, EV/battery, renewable, specialty chemicals, AI infra, fintech, CDMO.
+
+    Returns a job_id immediately. Poll GET /scan/unicorns/{job_id} for results.
+    Typical duration: 5-20 minutes depending on symbol count.
+    """
+    params = body.model_dump()
+    universe_size = len(params.get("symbol_list") or UNICORN_UNIVERSE)
+    job_id = job_store.create_job(job_type="unicorn_hunt", params={
+        "top_n": params["top_n"],
+        "symbol_count": universe_size,
+    })
+
+    thread = threading.Thread(
+        target=_run_hunt_background,
+        args=(job_id, params),
+        daemon=True,
+        name=f"hunt-{job_id[:8]}",
+    )
+    thread.start()
+
+    return {
+        "job_id": job_id,
+        "status": "pending",
+        "message": (
+            f"Unicorn hunt started across {universe_size} undiscovered small/mid-cap stocks. "
+            f"Looking for next-gen multi-baggers with max ₹15,000 Cr market cap. "
+            f"Poll GET /api/v1/scan/unicorns/{job_id} for progress and results."
+        ),
+        "poll_url": f"/api/v1/scan/unicorns/{job_id}",
+        "disclaimer": DISCLAIMER,
+    }
+
+
+@router.get(
+    "/scan/unicorns/{job_id}",
+    summary="Get unicorn hunt job status and results",
+)
+def get_unicorn_hunt(job_id: str) -> Dict[str, Any]:
+    """Poll this endpoint after starting a hunt with POST /scan/unicorns."""
+    job = job_store.get_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+
+    response: Dict[str, Any] = {
+        "job_id": job["job_id"],
+        "status": job["status"],
+        "created_at": job["created_at"],
+        "started_at": job.get("started_at"),
+        "completed_at": job.get("completed_at"),
+        "progress": job["progress"],
+    }
+
+    if job["status"] == "failed":
+        response["error"] = job.get("error")
+    elif job["status"] == "complete":
+        response["result"] = job["result"]
+        response["disclaimer"] = DISCLAIMER
 
     return response
 
