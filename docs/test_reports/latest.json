@@ -1,0 +1,3211 @@
+{
+  "generated_at": "2026-06-07T01:28:40.999963",
+  "summary": {
+    "total": 244,
+    "passed": 244,
+    "failed": 0,
+    "skipped": 0
+  },
+  "by_category": {
+    "API Endpoints": [
+      {
+        "test": "tests/test_api.py::test_health_returns_ok",
+        "status": "PASSED",
+        "duration_ms": 10.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_categories_returns_six_categories",
+        "status": "PASSED",
+        "duration_ms": 5.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_categories_has_disclaimer",
+        "status": "PASSED",
+        "duration_ms": 4.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_disclaimer_endpoint",
+        "status": "PASSED",
+        "duration_ms": 3.9,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_order_preview_returns_preview",
+        "status": "PASSED",
+        "duration_ms": 4.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_order_preview_shows_paper_trade_mode",
+        "status": "PASSED",
+        "duration_ms": 5.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_order_place_rejected_without_confirmation",
+        "status": "PASSED",
+        "duration_ms": 4.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_order_place_accepted_with_confirmation",
+        "status": "PASSED",
+        "duration_ms": 4.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_order_place_rejected_insufficient_funds",
+        "status": "PASSED",
+        "duration_ms": 4.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_order_side_validation",
+        "status": "PASSED",
+        "duration_ms": 2.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_paper_log_returns_list",
+        "status": "PASSED",
+        "duration_ms": 4.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_research_returns_200",
+        "status": "PASSED",
+        "duration_ms": 61.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_research_contains_disclaimer",
+        "status": "PASSED",
+        "duration_ms": 30.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_research_invalid_ticker_in_body_returns_400",
+        "status": "PASSED",
+        "duration_ms": 28.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_api.py::test_research_scores_in_range",
+        "status": "PASSED",
+        "duration_ms": 30.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_research_500_on_unexpected_error",
+        "status": "PASSED",
+        "duration_ms": 6.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_research_400_on_value_error",
+        "status": "PASSED",
+        "duration_ms": 5.5,
+        "error": null
+      }
+    ],
+    "Audit & Prompt Versioning": [
+      {
+        "test": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_string",
+        "status": "PASSED",
+        "duration_ms": 2.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_unknown_on_failure",
+        "status": "PASSED",
+        "duration_ms": 1.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_creates_prompt_file",
+        "status": "PASSED",
+        "duration_ms": 3.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_content_includes_reason",
+        "status": "PASSED",
+        "duration_ms": 2.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_increments_version",
+        "status": "PASSED",
+        "duration_ms": 5.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestAuditAgent::test_changelog_is_updated",
+        "status": "PASSED",
+        "duration_ms": 2.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestAuditAgent::test_changed_files_listed_in_prompt",
+        "status": "PASSED",
+        "duration_ms": 2.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_audit_agent.py::TestAuditAgent::test_backtest_result_included_when_provided",
+        "status": "PASSED",
+        "duration_ms": 2.6,
+        "error": null
+      }
+    ],
+    "Broker & Order Execution": [
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_valid_order_request",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_ticker_normalised_to_uppercase",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_invalid_ticker_raises",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_invalid_quantity_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_zero_quantity_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_negative_price_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_preview_contains_all_fields",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestOrderRequest::test_preview_estimated_value_correct",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_is_paper_trading_by_default",
+        "status": "PASSED",
+        "duration_ms": 1.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_order_rejected_without_confirmation",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_order_placed_with_confirmation",
+        "status": "PASSED",
+        "duration_ms": 1.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_insufficient_funds_rejected",
+        "status": "PASSED",
+        "duration_ms": 1.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_trade_log_records_order",
+        "status": "PASSED",
+        "duration_ms": 2.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_multiple_orders_in_log",
+        "status": "PASSED",
+        "duration_ms": 2.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_preview_shows_paper_trade_mode",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_paper_trade_with_confirmation",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_without_confirmation_rejected",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_disclaimer_always_in_preview",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      }
+    ],
+    "Fundamental Analysis": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_compute_roce_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_compute_roce_zero_capital_employed",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_compute_roce_negative_capital_employed",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_de_between_1_and_2",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_de_between_0_and_1",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_de_none",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_zero_revenue",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_medium",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_low_positive",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_negative",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_15pct",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_10pct",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_5pct",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_low_positive",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_profit_cagr_negative_start_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_revenue_cagr_insufficient_data",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_overall_score_all_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_revenue_cagr_returns_value_when_enough_data",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_profit_cagr_none_end_value",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_profit_cagr_valid_returns_value",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_score_roe_between_10_and_15",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_score_fcf_between_5_and_10",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::test_cagr_basic",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::test_cagr_zero_start_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::test_cagr_negative_years_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::test_cagr_none_inputs",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_roe_normal",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_roe_zero_equity",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_debt_equity_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_debt_equity_zero_equity",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_interest_coverage_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_interest_coverage_zero_interest",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_fcf",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_excellent",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_good",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_minimum_buffett",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_poor",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_negative",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_debt_equity_no_debt",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_debt_equity_graham_safe",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_debt_equity_high_risk",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_revenue_cagr_high_growth",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_revenue_cagr_negative",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_statements",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_empty_statements_returns_error",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_quarterly_only_returns_none_cagr",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      }
+    ],
+    "Valuation & DCF": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_dividend_yield_zero_price_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_dividend_yield_negative_price_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pe_between_20_and_30",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pe_between_30_and_50",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pe_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pb_between_1_and_1_5",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pb_between_3_and_5",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pb_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_peg_between_1_and_1_5",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_peg_between_1_5_and_2",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_peg_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_between_25_and_40",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_between_10_and_25",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_between_0_and_10",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_none_intrinsic",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_dcf_zero_shares_uses_default_1",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationLastBranches::test_score_pe_between_15_and_20",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationLastBranches::test_score_pb_between_1_5_and_3",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValuationLastBranches::test_score_pb_at_or_below_1",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_pe_ratio_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_pe_ratio_negative_eps_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_pe_ratio_zero_eps_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_pb_ratio_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_pb_ratio_zero_book_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_ev_ebitda_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_ev_ebitda_zero_ebitda_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_peg_ratio_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_peg_ratio_zero_growth_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dividend_yield_normal",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pe_graham_value",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pe_very_low",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pe_very_high",
+        "status": "PASSED",
+        "duration_ms": 0.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pb_graham_attractive",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pb_expensive",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_peg_lynch_undervalued",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_peg_overvalued",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_margin_of_safety_deep_value",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_score_margin_of_safety_above_intrinsic",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_positive_fcf",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_negative_fcf_returns_error",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_assumptions_shown",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_custom_margin_of_safety",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_analyze_returns_all_keys",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_valuation_agent.py::TestValuationAgent::test_overall_valuation_score_in_range",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      }
+    ],
+    "Risk Detection": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestRiskAgentGaps::test_risk_score_de_above_3",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestRiskAgentGaps::test_risk_score_de_between_2_and_3",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestRiskAgentGaps::test_risk_score_de_none_no_extra_penalty",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_avoid_high_risk",
+        "status": "PASSED",
+        "duration_ms": 26.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_missing_risk_appetite_flagged",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_high_debt_flag_detected",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_negative_fcf_flag_detected",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_high_promoter_pledge_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_low_promoter_holding_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_overvalued_pe_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_auditor_change_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_governance_issue_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_sudden_price_spike_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_negative_operating_cash_flow_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_clean_company_no_flags",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_de_exactly_at_threshold_no_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_pe_exactly_at_threshold_no_flag",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_risk_score_zero_for_no_flags",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_risk_score_severe_flags_higher",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_risk_score_capped_at_10",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_returns_all_keys",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_high_risk_labeled_correctly",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_low_risk_labeled_correctly",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      }
+    ],
+    "Portfolio Construction": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestPortfolioAgentGaps::test_sector_weight_clamped_when_sector_nearly_full",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestPortfolioAgentGaps::test_weight_zero_triggers_break",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_portfolio_suggest_endpoint",
+        "status": "PASSED",
+        "duration_ms": 5.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_missing_horizon_flagged",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_insufficient_emergency_fund_flagged",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_valid_profile_no_issues",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_exactly_six_months_emergency_fund_accepted",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_suggest_allocation_returns_allocations",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_pct_not_exceed_single_stock_limit",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_total_not_exceed_100",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_same_sector_concentration_limited",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_disclaimer_always_present",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_incomplete_profile_returns_error",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_no_eligible_stocks_returns_message",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_conservative_profile_lower_single_stock_limit",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_amount_matches_pct",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      }
+    ],
+    "Research Orchestration": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_between_15_and_20",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_between_10_and_15",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_between_5_and_10",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_none_values",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_research_returns_all_required_keys",
+        "status": "PASSED",
+        "duration_ms": 26.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_disclaimer_always_present",
+        "status": "PASSED",
+        "duration_ms": 29.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_final_rating_is_valid_value",
+        "status": "PASSED",
+        "duration_ms": 26.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_scores_are_in_range",
+        "status": "PASSED",
+        "duration_ms": 29.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_invalid_ticker_raises",
+        "status": "PASSED",
+        "duration_ms": 30.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_high_growth",
+        "status": "PASSED",
+        "duration_ms": 27.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_low_growth",
+        "status": "PASSED",
+        "duration_ms": 27.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_strong_candidate",
+        "status": "PASSED",
+        "duration_ms": 25.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_with_mock",
+        "status": "PASSED",
+        "duration_ms": 110.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_falls_back_on_error",
+        "status": "PASSED",
+        "duration_ms": 100.9,
+        "error": null
+      }
+    ],
+    "Input Validation": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_none_returns_none",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_valid_float",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_valid_int",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_non_numeric_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_score_non_numeric_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_price_non_numeric_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_quantity_float_truncated",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_zero_valid",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateTicker::test_valid_ticker",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateTicker::test_valid_ticker_with_hyphen",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateTicker::test_empty_ticker_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateTicker::test_none_ticker_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateTicker::test_whitespace_stripped",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateQuantity::test_valid_quantity",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateQuantity::test_string_quantity_converted",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateQuantity::test_zero_raises",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateQuantity::test_negative_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateQuantity::test_non_numeric_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidatePrice::test_valid_price",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidatePrice::test_string_price_converted",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidatePrice::test_zero_price_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidatePrice::test_negative_price_raises",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateScore::test_valid_score_10",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateScore::test_valid_score_0",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateScore::test_score_above_10_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateScore::test_score_below_0_raises",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_validators.py::TestValidateScore::test_string_score_converted",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      }
+    ],
+    "Data Collection": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestDataCollectorLastBranches::test_fetch_historical_prices_general_exception_returns_empty",
+        "status": "PASSED",
+        "duration_ms": 26.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_returns_list_on_success",
+        "status": "PASSED",
+        "duration_ms": 2.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_returns_empty_on_error",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_stores_source_url",
+        "status": "PASSED",
+        "duration_ms": 1.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_financials_screener_returns_ticker",
+        "status": "PASSED",
+        "duration_ms": 0.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_historical_prices_no_yfinance_returns_empty",
+        "status": "PASSED",
+        "duration_ms": 0.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_close_does_not_raise",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_validate_ticker_in_fetch_financials",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      }
+    ],
+    "Coverage Gap Tests": [
+      {
+        "test": "tests/test_coverage_gaps.py::TestLoggerGaps::test_get_logger_returns_same_instance_on_repeat_call",
+        "status": "PASSED",
+        "duration_ms": 0.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_coverage_gaps.py::TestLoggerGaps::test_get_logger_custom_level",
+        "status": "PASSED",
+        "duration_ms": 1.4,
+        "error": null
+      }
+    ],
+    "News & Sentiment": [
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_when_no_api_key",
+        "status": "PASSED",
+        "duration_ms": 27.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_articles_on_success",
+        "status": "PASSED",
+        "duration_ms": 2.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_on_error",
+        "status": "PASSED",
+        "duration_ms": 0.7,
+        "error": null
+      }
+    ],
+    "Moat & Business Quality": [
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_returns_all_dimensions",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_is_5_for_all",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_in_range",
+        "status": "PASSED",
+        "duration_ms": 2.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_max_inputs_gives_near_10",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_min_inputs_gives_0",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_without_llm_uses_fallback",
+        "status": "PASSED",
+        "duration_ms": 1.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_success",
+        "status": "PASSED",
+        "duration_ms": 26.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_fallback_on_error",
+        "status": "PASSED",
+        "duration_ms": 27.4,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_returns_ticker",
+        "status": "PASSED",
+        "duration_ms": 2.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_empty_articles_returns_neutral",
+        "status": "PASSED",
+        "duration_ms": 1.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_positive_sentiment",
+        "status": "PASSED",
+        "duration_ms": 1.1,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_negative_sentiment",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_mixed_sentiment",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_without_llm_uses_keyword_fallback",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_success",
+        "status": "PASSED",
+        "duration_ms": 26.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_fallback_on_error",
+        "status": "PASSED",
+        "duration_ms": 28.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_format_articles_caps_at_20",
+        "status": "PASSED",
+        "duration_ms": 1.9,
+        "error": null
+      }
+    ]
+  },
+  "all_results": [
+    {
+      "test_id": "tests/test_api.py::test_health_returns_ok",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 10.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_categories_returns_six_categories",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 5.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_categories_has_disclaimer",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 4.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_disclaimer_endpoint",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 3.9,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_order_preview_returns_preview",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 4.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_order_preview_shows_paper_trade_mode",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 5.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_order_place_rejected_without_confirmation",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 4.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_order_place_accepted_with_confirmation",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 4.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_order_place_rejected_insufficient_funds",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 4.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_order_side_validation",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 2.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_paper_log_returns_list",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 4.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_research_returns_200",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 61.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_research_contains_disclaimer",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 30.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_research_invalid_ticker_in_body_returns_400",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 28.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_api.py::test_research_scores_in_range",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 30.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_string",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 2.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_unknown_on_failure",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 1.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_creates_prompt_file",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 3.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_content_includes_reason",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 2.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_increments_version",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 5.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_changelog_is_updated",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 2.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_changed_files_listed_in_prompt",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 2.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_backtest_result_included_when_provided",
+      "category": "Audit & Prompt Versioning",
+      "status": "PASSED",
+      "duration_ms": 2.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_valid_order_request",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_ticker_normalised_to_uppercase",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_invalid_ticker_raises",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_invalid_quantity_raises",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_zero_quantity_raises",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_negative_price_raises",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_preview_contains_all_fields",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_preview_estimated_value_correct",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_is_paper_trading_by_default",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_order_rejected_without_confirmation",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_order_placed_with_confirmation",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_insufficient_funds_rejected",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_trade_log_records_order",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 2.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_multiple_orders_in_log",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 2.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_preview_shows_paper_trade_mode",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_paper_trade_with_confirmation",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_without_confirmation_rejected",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_disclaimer_always_in_preview",
+      "category": "Broker & Order Execution",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_compute_roce_normal",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_compute_roce_zero_capital_employed",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_compute_roce_negative_capital_employed",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_de_between_1_and_2",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_de_between_0_and_1",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_de_none",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_zero_revenue",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_medium",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_low_positive",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_fcf_negative",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_15pct",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_10pct",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_5pct",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_score_revenue_cagr_low_positive",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_profit_cagr_negative_start_returns_none",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_revenue_cagr_insufficient_data",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalAgentGaps::test_overall_score_all_none",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_dividend_yield_zero_price_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_dividend_yield_negative_price_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pe_between_20_and_30",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pe_between_30_and_50",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pe_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pb_between_1_and_1_5",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pb_between_3_and_5",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_pb_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_peg_between_1_and_1_5",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_peg_between_1_5_and_2",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_peg_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_between_25_and_40",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_between_10_and_25",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_between_0_and_10",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_score_margin_of_safety_none_intrinsic",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationAgentGaps::test_dcf_zero_shares_uses_default_1",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestRiskAgentGaps::test_risk_score_de_above_3",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestRiskAgentGaps::test_risk_score_de_between_2_and_3",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestRiskAgentGaps::test_risk_score_de_none_no_extra_penalty",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestPortfolioAgentGaps::test_sector_weight_clamped_when_sector_nearly_full",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestPortfolioAgentGaps::test_weight_zero_triggers_break",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_between_15_and_20",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_between_10_and_15",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_between_5_and_10",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestOrchestratorGaps::test_growth_score_none_values",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_none_returns_none",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_valid_float",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_valid_int",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_non_numeric_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_score_non_numeric_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_price_non_numeric_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_quantity_float_truncated",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_zero_valid",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_revenue_cagr_returns_value_when_enough_data",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_profit_cagr_none_end_value",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_profit_cagr_valid_returns_value",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_score_roe_between_10_and_15",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestFundamentalLastBranches::test_score_fcf_between_5_and_10",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationLastBranches::test_score_pe_between_15_and_20",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationLastBranches::test_score_pb_between_1_5_and_3",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestValuationLastBranches::test_score_pb_at_or_below_1",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestDataCollectorLastBranches::test_fetch_historical_prices_general_exception_returns_empty",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 26.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestLoggerGaps::test_get_logger_returns_same_instance_on_repeat_call",
+      "category": "Coverage Gap Tests",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestLoggerGaps::test_get_logger_custom_level",
+      "category": "Coverage Gap Tests",
+      "status": "PASSED",
+      "duration_ms": 1.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_research_500_on_unexpected_error",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 6.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_portfolio_suggest_endpoint",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 5.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_research_400_on_value_error",
+      "category": "API Endpoints",
+      "status": "PASSED",
+      "duration_ms": 5.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_returns_list_on_success",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 2.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_returns_empty_on_error",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_stores_source_url",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_when_no_api_key",
+      "category": "News & Sentiment",
+      "status": "PASSED",
+      "duration_ms": 27.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_articles_on_success",
+      "category": "News & Sentiment",
+      "status": "PASSED",
+      "duration_ms": 2.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_on_error",
+      "category": "News & Sentiment",
+      "status": "PASSED",
+      "duration_ms": 0.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_financials_screener_returns_ticker",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_historical_prices_no_yfinance_returns_empty",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_close_does_not_raise",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_validate_ticker_in_fetch_financials",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::test_cagr_basic",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::test_cagr_zero_start_returns_none",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::test_cagr_negative_years_returns_none",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::test_cagr_none_inputs",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_roe_normal",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_roe_zero_equity",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_debt_equity_normal",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_debt_equity_zero_equity",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_interest_coverage_normal",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_interest_coverage_zero_interest",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_compute_fcf",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_excellent",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_good",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_minimum_buffett",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_poor",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_negative",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_roe_none",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_debt_equity_no_debt",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_debt_equity_graham_safe",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_debt_equity_high_risk",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_revenue_cagr_high_growth",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_score_revenue_cagr_negative",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_statements",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_empty_statements_returns_error",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_quarterly_only_returns_none_cagr",
+      "category": "Fundamental Analysis",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_returns_all_dimensions",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_is_5_for_all",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_in_range",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 2.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_max_inputs_gives_near_10",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_min_inputs_gives_0",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_without_llm_uses_fallback",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_success",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 26.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_fallback_on_error",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 27.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_returns_ticker",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 2.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_empty_articles_returns_neutral",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_positive_sentiment",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_negative_sentiment",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_mixed_sentiment",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_without_llm_uses_keyword_fallback",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_success",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 26.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_fallback_on_error",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 28.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_format_articles_caps_at_20",
+      "category": "Moat & Business Quality",
+      "status": "PASSED",
+      "duration_ms": 1.9,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_research_returns_all_required_keys",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 26.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_disclaimer_always_present",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 29.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_final_rating_is_valid_value",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 26.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_scores_are_in_range",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 29.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_invalid_ticker_raises",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 30.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_high_growth",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 27.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_low_growth",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 27.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_strong_candidate",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 25.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_avoid_high_risk",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 26.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_with_mock",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 110.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_falls_back_on_error",
+      "category": "Research Orchestration",
+      "status": "PASSED",
+      "duration_ms": 100.9,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_missing_risk_appetite_flagged",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_missing_horizon_flagged",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_insufficient_emergency_fund_flagged",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_valid_profile_no_issues",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_exactly_six_months_emergency_fund_accepted",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_suggest_allocation_returns_allocations",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_pct_not_exceed_single_stock_limit",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_total_not_exceed_100",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_same_sector_concentration_limited",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_disclaimer_always_present",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_incomplete_profile_returns_error",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_no_eligible_stocks_returns_message",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_conservative_profile_lower_single_stock_limit",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_amount_matches_pct",
+      "category": "Portfolio Construction",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_high_debt_flag_detected",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_negative_fcf_flag_detected",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_high_promoter_pledge_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_low_promoter_holding_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_overvalued_pe_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_auditor_change_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_governance_issue_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_sudden_price_spike_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_negative_operating_cash_flow_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_clean_company_no_flags",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_de_exactly_at_threshold_no_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_pe_exactly_at_threshold_no_flag",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_risk_score_zero_for_no_flags",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_risk_score_severe_flags_higher",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_risk_score_capped_at_10",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_returns_all_keys",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_high_risk_labeled_correctly",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_low_risk_labeled_correctly",
+      "category": "Risk Detection",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateTicker::test_valid_ticker",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateTicker::test_valid_ticker_with_hyphen",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateTicker::test_empty_ticker_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateTicker::test_none_ticker_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateTicker::test_whitespace_stripped",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateQuantity::test_valid_quantity",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateQuantity::test_string_quantity_converted",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateQuantity::test_zero_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateQuantity::test_negative_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateQuantity::test_non_numeric_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidatePrice::test_valid_price",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidatePrice::test_string_price_converted",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidatePrice::test_zero_price_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidatePrice::test_negative_price_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateScore::test_valid_score_10",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateScore::test_valid_score_0",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateScore::test_score_above_10_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateScore::test_score_below_0_raises",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_validators.py::TestValidateScore::test_string_score_converted",
+      "category": "Input Validation",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_pe_ratio_normal",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_pe_ratio_negative_eps_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_pe_ratio_zero_eps_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_pb_ratio_normal",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_pb_ratio_zero_book_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_ev_ebitda_normal",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_ev_ebitda_zero_ebitda_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_peg_ratio_normal",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_peg_ratio_zero_growth_returns_none",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dividend_yield_normal",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pe_graham_value",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pe_very_low",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pe_very_high",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pb_graham_attractive",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_pb_expensive",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_peg_lynch_undervalued",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_peg_overvalued",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_margin_of_safety_deep_value",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_score_margin_of_safety_above_intrinsic",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_positive_fcf",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_negative_fcf_returns_error",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_assumptions_shown",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_custom_margin_of_safety",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_analyze_returns_all_keys",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.4,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_overall_valuation_score_in_range",
+      "category": "Valuation & DCF",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    }
+  ]
+}

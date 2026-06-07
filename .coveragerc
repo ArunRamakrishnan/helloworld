@@ -1,0 +1,19 @@
+[run]
+source = src
+
+[report]
+omit =
+    # Broker connectors are thin wrappers around third-party SDKs not installed in CI
+    src/brokers/zerodha.py
+    src/brokers/upstox.py
+    src/brokers/angelone.py
+    src/brokers/dhan.py
+    # DB models/repo require a live PostgreSQL connection
+    src/data/models.py
+    src/data/repository.py
+
+exclude_lines =
+    pragma: no cover
+    if TYPE_CHECKING:
+    raise NotImplementedError
+    except ImportError:
