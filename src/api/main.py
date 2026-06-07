@@ -1,0 +1,48 @@
+"""FastAPI application entry point."""
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from src.api.routes import router
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+DISCLAIMER = (
+    "This is educational research, not financial advice. "
+    "Consult a SEBI-registered investment adviser before investing."
+)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Indian Investment Research Wizard starting up")
+    yield
+    logger.info("Shutting down")
+
+
+app = FastAPI(
+    title="Indian Investment Research Wizard",
+    description=(
+        "AI-powered investment research for NSE/BSE equities. "
+        f"{DISCLAIMER}"
+    ),
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:8501"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(router, prefix="/api/v1")
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "disclaimer": DISCLAIMER}
