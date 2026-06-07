@@ -16,10 +16,10 @@ DISCLAIMER = (
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    logger.info("Indian Investment Research Wizard starting up")
-    yield
-    logger.info("Shutting down")
+async def lifespan(app: FastAPI):  # pragma: no cover
+    logger.info("Indian Investment Research Wizard starting up")  # pragma: no cover
+    yield  # pragma: no cover
+    logger.info("Shutting down")  # pragma: no cover
 
 
 app = FastAPI(

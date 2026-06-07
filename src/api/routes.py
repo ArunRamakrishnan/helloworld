@@ -123,15 +123,19 @@ def get_paper_log() -> Dict[str, Any]:
 # Portfolio endpoints
 # ------------------------------------------------------------------
 
+class PortfolioRequest(BaseModel):
+    user_profile: UserProfileModel
+    research_reports: List[Dict[str, Any]] = []
+
+
 @router.post("/portfolio/suggest", summary="Suggest allocation bands based on user profile")
 def suggest_portfolio(
-    user_profile: UserProfileModel,
+    body: PortfolioRequest,
     total_investment: float = Query(..., gt=0, description="Total amount to invest in INR"),
-    research_reports: List[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     agent = PortfolioAgent()
-    profile_dict = user_profile.model_dump()
-    return agent.suggest_allocation(profile_dict, research_reports or [], total_investment)
+    profile_dict = body.user_profile.model_dump()
+    return agent.suggest_allocation(profile_dict, body.research_reports, total_investment)
 
 
 # ------------------------------------------------------------------

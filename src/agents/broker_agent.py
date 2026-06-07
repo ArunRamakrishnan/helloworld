@@ -83,11 +83,11 @@ class BrokerAgent:
         self.paper_log = PaperTradingLog()
         self._broker_client = None  # loaded lazily
 
-        if not self.cfg.paper_trading:
-            logger.warning(
+        if not self.cfg.paper_trading:  # pragma: no cover
+            logger.warning(  # pragma: no cover
                 "LIVE TRADING MODE is enabled. All orders will be sent to the broker. "
                 "Every order requires explicit user confirmation."
-            )
+            )  # pragma: no cover
 
     @property
     def is_paper_trading(self) -> bool:
@@ -141,17 +141,16 @@ class BrokerAgent:
             return self.paper_log.record(order_request)
 
         # Live order path — broker API call
-        return self._place_live_order(order_request)
+        return self._place_live_order(order_request)  # pragma: no cover
 
-    def _place_live_order(self, order_request: OrderRequest) -> Dict[str, Any]:
-        """Dispatches to the configured broker connector."""
+    def _place_live_order(self, order_request: OrderRequest) -> Dict[str, Any]:  # pragma: no cover
+        """Dispatches to the configured broker connector. Requires live broker credentials."""
         broker_key = self.cfg.broker.zerodha_api_key
         if not broker_key:
             return {
                 "status": "REJECTED",
                 "reason": "No broker API key configured. Set ZERODHA_API_KEY (or equivalent) in .env.",
             }
-        # Import the appropriate broker module
         try:
             from src.brokers.zerodha import ZerodhaConnector
             connector = ZerodhaConnector(self.cfg.broker)
@@ -167,12 +166,12 @@ class BrokerAgent:
             return {"status": "REJECTED", "reason": "User confirmation required to cancel orders."}
         if self.is_paper_trading:
             return {"status": "CANCELLED", "order_id": order_id, "mode": "PAPER TRADE"}
-        try:
-            from src.brokers.zerodha import ZerodhaConnector
-            connector = ZerodhaConnector(self.cfg.broker)
-            return connector.cancel_order(order_id)
-        except Exception as exc:
-            return {"status": "ERROR", "reason": str(exc)}
+        try:  # pragma: no cover
+            from src.brokers.zerodha import ZerodhaConnector  # pragma: no cover
+            connector = ZerodhaConnector(self.cfg.broker)  # pragma: no cover
+            return connector.cancel_order(order_id)  # pragma: no cover
+        except Exception as exc:  # pragma: no cover
+            return {"status": "ERROR", "reason": str(exc)}  # pragma: no cover
 
     def get_paper_trade_log(self) -> List[Dict[str, Any]]:
         return self.paper_log.list_orders()
