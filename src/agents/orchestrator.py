@@ -9,6 +9,9 @@ from src.agents.valuation_agent import ValuationAgent
 from src.agents.moat_agent import MoatAgent
 from src.agents.risk_agent import RiskAgent
 from src.agents.news_agent import NewsAgent
+from src.agents.fisher_agent import PhilipFisherAgent
+from src.agents.sentiment_agent import SentimentAgent
+from src.agents.unicorn_detector import UnicornDetectorAgent
 from src.data.models import FinalRating, StockCategory
 from src.utils.config import get_config
 from src.utils.logger import get_logger
@@ -52,6 +55,9 @@ class Orchestrator:
         self.moat_agent = MoatAgent(config=self.cfg)
         self.risk_agent = RiskAgent()
         self.news_agent = NewsAgent(config=self.cfg)
+        self.fisher_agent = PhilipFisherAgent(config=self.cfg)
+        self.sentiment_agent = SentimentAgent(config=self.cfg)
+        self.unicorn_agent = UnicornDetectorAgent(config=self.cfg)
         self._llm: Optional[anthropic.Anthropic] = None
         if self.cfg.llm.anthropic_api_key:
             self._llm = anthropic.Anthropic(api_key=self.cfg.llm.anthropic_api_key)
@@ -94,11 +100,30 @@ class Orchestrator:
         # 3. Moat
         moat = self.moat_agent.analyze(validated, business_description)
 
-        # 4. News
+        # 4. News + Sentiment
         articles = self.data_agent.fetch_news(validated)
         news = self.news_agent.analyze(validated, articles)
+        sentiment = self.sentiment_agent.analyze(validated, extra_articles=articles)
 
-        # 5. Risk (combines all signals)
+        # 5. Philip Fisher analysis
+        fisher = self.fisher_agent.analyze(
+            validated, business_description,
+            revenue_cagr=fundamental.get("revenue_cagr_3y"),
+            profit_cagr=fundamental.get("profit_cagr_3y"),
+            roe=fundamental.get("roe"),
+        )
+
+        # 6. Unicorn detection
+        unicorn = self.unicorn_agent.analyze(
+            validated, business_description, market_cap_cr,
+            revenue_cagr=fundamental.get("revenue_cagr_3y"),
+            profit_cagr=fundamental.get("profit_cagr_3y"),
+            roe=fundamental.get("roe"),
+            debt_equity=fundamental.get("debt_equity"),
+            promoter_holding_pct=fundamental.get("promoter_holding_pct"),
+        )
+
+        # 7. Risk (combines all signals)
         risk_data = {
             **fundamental,
             **valuation,
@@ -106,8 +131,8 @@ class Orchestrator:
         }
         risk = self.risk_agent.analyze(validated, risk_data)
 
-        # 6. LLM synthesis
-        synthesis = self._synthesize(validated, fundamental, valuation, moat, risk, news)
+        # 8. LLM synthesis
+        synthesis = self._synthesize(validated, fundamental, valuation, moat, risk, news, fisher, unicorn)
 
         report = {
             "ticker": validated,
@@ -118,6 +143,9 @@ class Orchestrator:
             "growth_score": self._growth_score(fundamental),
             "valuation_score": valuation.get("valuation_score"),
             "moat_score": moat.get("moat_score"),
+            "fisher_score": fisher.get("fisher_score"),
+            "unicorn_score": unicorn.get("unicorn_score"),
+            "sentiment_score": sentiment.get("sentiment_score"),
             "risk_score": risk.get("risk_score"),
             # Ratios
             "pe_ratio": valuation.get("pe_ratio"),
@@ -139,6 +167,22 @@ class Orchestrator:
             "news_sentiment": news.get("sentiment"),
             "news_summary": news.get("summary"),
             "moat_summary": moat.get("moat_summary"),
+            # Fisher
+            "fisher_summary": fisher.get("fisher_summary"),
+            "ten_x_potential": fisher.get("ten_x_potential"),
+            "growth_ceiling": fisher.get("growth_ceiling"),
+            "scuttlebutt_signals": fisher.get("scuttlebutt_signals", []),
+            # Unicorn
+            "unicorn_summary": unicorn.get("unicorn_summary"),
+            "emerging_themes": unicorn.get("emerging_themes", []),
+            "unicorn_size": unicorn.get("size_label"),
+            "ten_x_candidate": unicorn.get("ten_x_candidate"),
+            "watch_triggers": unicorn.get("watch_triggers", []),
+            # Sentiment
+            "market_sentiment": sentiment.get("overall_sentiment"),
+            "hype_detected": sentiment.get("hype_detected"),
+            "accumulation_signal": sentiment.get("accumulation_signal"),
+            "retail_buzz_level": sentiment.get("retail_buzz_level"),
             # Synthesis
             **synthesis,
             "disclaimer": DISCLAIMER,
@@ -171,9 +215,11 @@ class Orchestrator:
         moat: Dict,
         risk: Dict,
         news: Dict,
+        fisher: Optional[Dict] = None,
+        unicorn: Optional[Dict] = None,
     ) -> Dict[str, Any]:
         if not self._llm:
-            return self._rule_based_synthesis(fundamental, valuation, moat, risk)
+            return self._rule_based_synthesis(fundamental, valuation, moat, risk, fisher, unicorn)
 
         data_summary = {
             "ticker": ticker,
@@ -188,6 +234,10 @@ class Orchestrator:
             "valuation_score": valuation.get("valuation_score"),
             "moat_score": moat.get("moat_score"),
             "moat_summary": moat.get("moat_summary"),
+            "fisher_score": (fisher or {}).get("fisher_score"),
+            "ten_x_potential": (fisher or {}).get("ten_x_potential"),
+            "unicorn_score": (unicorn or {}).get("unicorn_score"),
+            "emerging_themes": (unicorn or {}).get("emerging_themes", []),
             "risk_score": risk.get("risk_score"),
             "red_flags": [f["key"] for f in risk.get("red_flags", [])],
             "news_sentiment": news.get("sentiment"),
@@ -209,31 +259,53 @@ class Orchestrator:
             return self._rule_based_synthesis(fundamental, valuation, moat, risk)
 
     def _rule_based_synthesis(
-        self, fundamental: Dict, valuation: Dict, moat: Dict, risk: Dict
+        self, fundamental: Dict, valuation: Dict, moat: Dict, risk: Dict,
+        fisher: Optional[Dict] = None, unicorn: Optional[Dict] = None,
     ) -> Dict[str, Any]:
         fs = fundamental.get("financial_strength_score", 5)
         vs = valuation.get("valuation_score", 5)
         ms = moat.get("moat_score", 5)
         rs = risk.get("risk_score", 5)
+        fisher_score = (fisher or {}).get("fisher_score", 5)
+        unicorn_score = (unicorn or {}).get("unicorn_score", 5)
 
-        if fs >= 7 and vs >= 6 and ms >= 6 and rs <= 3:
-            rating = "Strong Research Candidate"
-            confidence = 75.0
-            category = "long_term_compounder"
-        elif rs >= 7:
+        if rs >= 7:
             rating = "Avoid"
             confidence = 80.0
             category = "avoid_watchlist"
+        elif unicorn_score >= 7.5 and rs <= 4:
+            rating = "Strong Research Candidate"
+            confidence = 78.0
+            category = "long_term_compounder"
+        elif fs >= 7 and vs >= 6 and ms >= 6 and rs <= 3:
+            rating = "Strong Research Candidate"
+            confidence = 75.0
+            category = "long_term_compounder"
+        elif fisher_score >= 7 and unicorn_score >= 6:
+            rating = "Strong Research Candidate"
+            confidence = 70.0
+            category = "momentum_risky"
         else:
             rating = "Watch"
             confidence = 55.0
             category = "undervalued_value"
 
+        bull = ["Strong financials", "Good moat score"] if fs >= 7 else []
+        if (fisher or {}).get("ten_x_potential"):
+            bull.append("Philip Fisher: 10x return potential identified")
+        if (unicorn or {}).get("ten_x_candidate"):
+            bull.append("Unicorn candidate — emerging sector tailwind")
+        bull = bull or ["Some positive attributes"]
+
         return {
             "business_summary": "LLM not configured — rule-based synthesis applied.",
-            "bull_case": ["Strong financials", "Good moat score"] if fs >= 7 else ["Some positive attributes"],
+            "bull_case": bull[:3],
             "bear_case": [f["description"] for f in risk.get("red_flags", [])[:2]] or ["Monitor closely"],
-            "ideal_investor_type": "Long-term value investor" if rating == "Strong Research Candidate" else "Cautious investor",
+            "ideal_investor_type": (
+                "Growth & momentum investor" if category == "momentum_risky"
+                else "Long-term value investor" if rating == "Strong Research Candidate"
+                else "Cautious investor"
+            ),
             "final_rating": rating,
             "confidence_pct": confidence,
             "category": category,

@@ -7,6 +7,10 @@ from pydantic import BaseModel, Field
 from src.agents.orchestrator import Orchestrator
 from src.agents.broker_agent import BrokerAgent, OrderRequest
 from src.agents.portfolio_agent import PortfolioAgent
+from src.agents.fisher_agent import PhilipFisherAgent
+from src.agents.sentiment_agent import SentimentAgent
+from src.agents.unicorn_detector import UnicornDetectorAgent
+from src.agents.daily_report import DailyReportOrchestrator
 from src.utils.config import get_config
 from src.utils.logger import get_logger
 
@@ -160,3 +164,123 @@ def list_categories() -> Dict[str, Any]:
 @router.get("/disclaimer")
 def get_disclaimer() -> Dict[str, str]:
     return {"disclaimer": DISCLAIMER}
+
+
+# ------------------------------------------------------------------
+# Philip Fisher endpoint
+# ------------------------------------------------------------------
+
+class FisherRequest(BaseModel):
+    ticker: str
+    business_description: str = Field(..., min_length=20)
+    revenue_cagr_3y: Optional[float] = None
+    profit_cagr_3y: Optional[float] = None
+    roe: Optional[float] = None
+
+
+@router.post("/research/fisher/{ticker}", summary="Philip Fisher analysis — innovation, vision, 10x potential")
+def fisher_analysis(ticker: str, body: FisherRequest) -> Dict[str, Any]:
+    try:
+        agent = PhilipFisherAgent(config=cfg)
+        return agent.analyze(
+            ticker=ticker,
+            business_description=body.business_description,
+            revenue_cagr=body.revenue_cagr_3y,
+            profit_cagr=body.profit_cagr_3y,
+            roe=body.roe,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        logger.error("Fisher analysis failed for %s: %s", ticker, exc)
+        raise HTTPException(status_code=500, detail="Fisher analysis failed")
+
+
+# ------------------------------------------------------------------
+# Sentiment endpoint
+# ------------------------------------------------------------------
+
+@router.get("/research/sentiment/{ticker}", summary="Market sentiment from public RSS feeds + LLM")
+def sentiment_analysis(ticker: str) -> Dict[str, Any]:
+    try:
+        agent = SentimentAgent(config=cfg)
+        return agent.analyze(ticker=ticker)
+    except Exception as exc:
+        logger.error("Sentiment analysis failed for %s: %s", ticker, exc)
+        raise HTTPException(status_code=500, detail="Sentiment analysis failed")
+
+
+# ------------------------------------------------------------------
+# Unicorn Detector endpoint
+# ------------------------------------------------------------------
+
+class UnicornRequest(BaseModel):
+    ticker: str
+    business_description: str = Field(..., min_length=20)
+    market_cap_cr: float = Field(..., gt=0)
+    revenue_cagr_3y: Optional[float] = None
+    profit_cagr_3y: Optional[float] = None
+    roe: Optional[float] = None
+    debt_equity: Optional[float] = None
+    promoter_holding_pct: Optional[float] = None
+
+
+@router.post("/research/unicorn/{ticker}", summary="Unicorn detection — small cap, founder-led, emerging themes")
+def unicorn_analysis(ticker: str, body: UnicornRequest) -> Dict[str, Any]:
+    try:
+        agent = UnicornDetectorAgent(config=cfg)
+        return agent.analyze(
+            ticker=ticker,
+            business_description=body.business_description,
+            market_cap_cr=body.market_cap_cr,
+            revenue_cagr=body.revenue_cagr_3y,
+            profit_cagr=body.profit_cagr_3y,
+            roe=body.roe,
+            debt_equity=body.debt_equity,
+            promoter_holding_pct=body.promoter_holding_pct,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        logger.error("Unicorn analysis failed for %s: %s", ticker, exc)
+        raise HTTPException(status_code=500, detail="Unicorn analysis failed")
+
+
+# ------------------------------------------------------------------
+# Daily Morning Report endpoint
+# ------------------------------------------------------------------
+
+class WatchlistItem(BaseModel):
+    ticker: str
+    current_price: float = Field(..., gt=0)
+    market_cap_cr: float = Field(..., gt=0)
+    business_description: str = Field(..., min_length=20)
+    eps: Optional[float] = None
+    book_value_per_share: Optional[float] = None
+    debt_cr: float = 0.0
+    cash_cr: float = 0.0
+    ebitda_cr: float = 0.0
+    fcf_cr: float = 0.0
+    shares_outstanding_cr: float = 1.0
+    dividend_per_share: float = 0.0
+    statements: List[Dict[str, Any]] = Field(default_factory=list)
+
+
+class DailyReportRequest(BaseModel):
+    watchlist: List[WatchlistItem] = Field(..., min_length=1)
+
+
+@router.post("/report/daily", summary="Morning report — Top 3 per category across your watchlist")
+def daily_report(body: DailyReportRequest) -> Dict[str, Any]:
+    """
+    Runs full research pipeline on all stocks in the watchlist and returns
+    ranked picks: Top Buffett, Growth, Small Cap, Emerging Theme, Dividend,
+    Fisher stocks + Stocks to Avoid + rebalancing note.
+    """
+    try:
+        orchestrator = DailyReportOrchestrator(config=cfg)
+        watchlist = [item.model_dump() for item in body.watchlist]
+        return orchestrator.run(watchlist)
+    except Exception as exc:
+        logger.error("Daily report failed: %s", exc)
+        raise HTTPException(status_code=500, detail="Daily report generation failed")
