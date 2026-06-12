@@ -25,7 +25,7 @@ MIN_PRICE_INR = 5                # Filter true penny stocks
 MIN_ROE = 0.06                   # At least 6% ROE
 MAX_DEBT_EQUITY = 4.0            # Debt/Equity ceiling (banks exempted by sector)
 MIN_REVENUE_CR = 50              # Must have meaningful revenue
-MAX_WORKERS = 12                 # Parallel yfinance fetch threads
+MAX_WORKERS = 4                  # Keep low — yfinance 429s above ~5 parallel
 
 # INR conversion: yfinance returns values in native currency (INR for NSE)
 # Market cap is in INR units from yfinance — divide by 1e7 to get crores
@@ -107,17 +107,25 @@ class UniverseScreenerAgent:
     # -----------------------------------------------------------------------
 
     def _fetch_stock_info(self, symbol: str) -> Optional[Dict[str, Any]]:
-        """Fetch yfinance info dict for one NSE symbol. Returns None on failure."""
-        try:
-            import yfinance as yf
-            ticker = yf.Ticker(f"{symbol}.NS")
-            info = ticker.info
-            if not info or info.get("regularMarketPrice") is None:
-                return None
-            return info
-        except Exception as exc:
-            logger.debug("yfinance fetch failed for %s: %s", symbol, exc)
-            return None
+        """Fetch yfinance info dict for one NSE symbol. Retries on 429 with backoff."""
+        import yfinance as yf
+        for attempt in range(4):
+            try:
+                info = yf.Ticker(f"{symbol}.NS").info
+                if not info or info.get("regularMarketPrice") is None:
+                    return None
+                return info
+            except Exception as exc:
+                msg = str(exc)
+                if "429" in msg or "Too Many Requests" in msg:
+                    wait = 2 ** attempt        # 1s, 2s, 4s, 8s
+                    logger.debug("429 for %s — retrying in %ds (attempt %d)", symbol, wait, attempt + 1)
+                    time.sleep(wait)
+                else:
+                    logger.debug("yfinance fetch failed for %s: %s", symbol, exc)
+                    return None
+        logger.debug("Giving up on %s after 4 attempts", symbol)
+        return None
 
     def _parse_info(self, symbol: str, info: Dict[str, Any]) -> Dict[str, Any]:
         """Parse yfinance info dict into standardised financial fields."""
