@@ -19,7 +19,7 @@ from src.utils.logger import get_logger
 logger = get_logger(__name__)
 
 INR_TO_CR = 1e7
-MAX_WORKERS = 15
+MAX_WORKERS = 4   # Keep low — yfinance 429s above ~5 parallel
 
 # -----------------------------------------------------------------------
 # Unicorn-specific filter thresholds (different from regular screener)
@@ -201,16 +201,26 @@ class UnicornHunterAgent:
         self.cfg = config or get_config()
 
     def _fetch_stock_info(self, symbol: str) -> Optional[Dict[str, Any]]:
-        try:
-            import yfinance as yf
-            ticker = yf.Ticker(f"{symbol}.NS")
-            info = ticker.info
-            if not info or info.get("regularMarketPrice") is None:
-                return None
-            return info
-        except Exception as exc:
-            logger.debug("yfinance fetch failed for %s: %s", symbol, exc)
-            return None
+        """Fetch yfinance info for one NSE symbol. Retries on 429 with backoff."""
+        import time
+        import yfinance as yf
+        for attempt in range(4):
+            try:
+                info = yf.Ticker(f"{symbol}.NS").info
+                if not info or info.get("regularMarketPrice") is None:
+                    return None
+                return info
+            except Exception as exc:
+                msg = str(exc)
+                if "429" in msg or "Too Many Requests" in msg:
+                    wait = 2 ** attempt
+                    logger.debug("429 for %s — retrying in %ds (attempt %d)", symbol, wait, attempt + 1)
+                    time.sleep(wait)
+                else:
+                    logger.debug("yfinance fetch failed for %s: %s", symbol, exc)
+                    return None
+        logger.debug("Giving up on %s after 4 attempts", symbol)
+        return None
 
     def _parse_info(self, symbol: str, info: Dict[str, Any]) -> Dict[str, Any]:
         mcap_cr = (info.get("marketCap") or 0) / INR_TO_CR
