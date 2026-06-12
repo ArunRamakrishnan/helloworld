@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.yfinance_client import fetch_ticker_info
 
 logger = get_logger(__name__)
 
@@ -201,26 +202,8 @@ class UnicornHunterAgent:
         self.cfg = config or get_config()
 
     def _fetch_stock_info(self, symbol: str) -> Optional[Dict[str, Any]]:
-        """Fetch yfinance info for one NSE symbol. Retries on 429 with backoff."""
-        import time
-        import yfinance as yf
-        for attempt in range(4):
-            try:
-                info = yf.Ticker(f"{symbol}.NS").info
-                if not info or info.get("regularMarketPrice") is None:
-                    return None
-                return info
-            except Exception as exc:
-                msg = str(exc)
-                if "429" in msg or "Too Many Requests" in msg:
-                    wait = 2 ** attempt
-                    logger.debug("429 for %s — retrying in %ds (attempt %d)", symbol, wait, attempt + 1)
-                    time.sleep(wait)
-                else:
-                    logger.debug("yfinance fetch failed for %s: %s", symbol, exc)
-                    return None
-        logger.debug("Giving up on %s after 4 attempts", symbol)
-        return None
+        """Fetch yfinance info for one NSE symbol (rate-limited, with retry)."""
+        return fetch_ticker_info(symbol)
 
     def _parse_info(self, symbol: str, info: Dict[str, Any]) -> Dict[str, Any]:
         mcap_cr = (info.get("marketCap") or 0) / INR_TO_CR
