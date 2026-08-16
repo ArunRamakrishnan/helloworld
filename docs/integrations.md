@@ -70,17 +70,42 @@ for how config/secrets are layered.
 ### 12. NSE IPO endpoints
 - **Used by:** `src/agents/ipo_agent.py::IPODataAgent`
 - **Endpoints:** `ipo-current-issue`, `all-upcoming-issues?category=ipo`,
-  `public-past-issues` (all under `https://www.nseindia.com/api/`), public, no key
+  `public-past-issues` (all under `https://www.nseindia.com/api/`), plus
+  `ipo-detail?symbol=...` for a single issue's demand/bid (subscription) data — this
+  is NSE's separate "IPO Tracker" page, distinct from the three listing endpoints.
+  All public, no key.
 - **Purpose:** current/upcoming/recently-listed IPO details — issue price band, size,
   open/close/listing dates. These are SEBI-mandated disclosures; SEBI itself doesn't
   expose a structured public API, so NSE's exchange-side surfacing of them is the
   integration point (same rationale as `fetch_nse_stock_list`). BSE has an IPO page
   but no comparably stable public JSON endpoint — each returned record carries a
   `bse_note` flagging this gap rather than silently only covering NSE.
+- **Session requirement:** these are undocumented JSON APIs guarded by a browser
+  session check — a bare GET without first visiting nseindia.com for session cookies
+  typically comes back `401`/`403`, or an HTML challenge page instead of JSON.
+  `IPODataAgent` warms a session (`GET https://www.nseindia.com`) once per instance,
+  with realistic browser headers (`User-Agent`, `Accept-Language`, `Referer`), and
+  re-warms + retries once on a `401`/`403` since NSE's session cookies are short-lived.
 - **Feeds:** the `/api/v1/ipo` endpoint and `IPOUnicornHunterAgent`'s candidate
-  universe (`recently_listed` results within `config.ipo.lookback_months`)
-- **Fallback:** returns an empty list per-endpoint on failure; `IPOUnicornHunterAgent`
-  returns a graceful "no IPOs found" result rather than erroring if the universe is empty
+  universe (`recently_listed` results within `config.ipo.lookback_months`, default
+  24 months — deliberately wide so a first run has volume to validate against;
+  tighten once it's confirmed finding real candidates)
+- **Fallback — status is explicit, not collapsed:** every `fetch_*` method returns
+  `{"status": "ok" | "unavailable", "error": ..., "records": [...]}` rather than a
+  bare list, so a blocked/failed NSE request is never silently indistinguishable
+  from "NSE has no matching IPOs right now." `IPOUnicornHunterAgent.hunt()` surfaces
+  four distinct outcomes (`data_unavailable`, `no_ipos_in_window`, `no_candidates`,
+  `ok`) plus a `funnel` breakdown (records received → after date filter → after the
+  growth/quality pre-filter → final candidates) for diagnosing exactly where the
+  pipeline narrowed to zero, instead of one opaque "no candidates found" message.
+- **`fetch_issue_detail(symbol)`** is available for a single-symbol subscription
+  deep-dive but isn't called in bulk during a hunt (would multiply session/rate-limit
+  risk across every candidate). Its field mapping is a best-effort guess — this
+  sandbox's outbound proxy blocks `nseindia.com` entirely (confirmed via `curl`; see
+  `RUNNING.md`), so none of these endpoints have been verified against a live NSE
+  response. The raw parsed JSON is returned alongside the mapped fields (`"raw"` key)
+  specifically so the mapping can be corrected once tested from an environment with
+  real network access.
 
 ## Brokers
 

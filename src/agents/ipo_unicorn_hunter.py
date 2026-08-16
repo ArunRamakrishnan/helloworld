@@ -9,6 +9,14 @@ UNICORN_UNIVERSE list. Adds IPO-specific context: listing date, issue price band
 listing gain, and a recency bonus (config.scoring.ipo_unicorn) since a stock still
 close to its IPO is, almost by definition, less "discovered" than one that's been
 trading for years.
+
+`hunt()` distinguishes four outcomes rather than collapsing every non-result into
+"no candidates" — the difference between "NSE was unreachable" and "NSE has no fresh
+IPOs to score" and "IPOs exist but none look like unicorns" matters for diagnosis:
+  - "data_unavailable"   — the NSE fetch itself failed (see result["funnel"]["nse_fetch"])
+  - "no_ipos_in_window"  — NSE responded, but no IPOs listed in the lookback window
+  - "no_candidates"      — IPOs were scanned but none passed/scored as unicorns
+  - "ok"                 — at least one candidate was found
 """
 from typing import Any, Dict, List, Optional
 
@@ -64,29 +72,59 @@ class IPOUnicornHunterAgent:
             progress_callback: optional callable(done, total), forwarded to the scan.
         """
         top_n = top_n if top_n is not None else self.cfg.ipo.default_top_n
+        lookback_months = months if months is not None else self.cfg.ipo.lookback_months
 
-        ipo_records: List[Dict[str, Any]] = []
+        funnel: Dict[str, Any] = {
+            "nse_fetch": None,
+            "ipo_records_received": 0,
+            "lookback_days": lookback_months * 30,
+            "after_date_filter": 0,
+            "unicorn_prefilter_passed": 0,
+            "unicorn_candidates": 0,
+        }
+
+        ipo_by_symbol: Dict[str, Any] = {}
         if symbol_list is None:
-            ipo_records = self.ipo_agent.fetch_recently_listed_ipos(months=months)
-            symbols = [r["symbol"] for r in ipo_records if r.get("symbol")]
+            fetch = self.ipo_agent.fetch_recently_listed_ipos(months=months)
+            funnel["nse_fetch"] = fetch["status"]
+            funnel["ipo_records_received"] = fetch.get("total_received", 0)
+            funnel["after_date_filter"] = fetch.get("total_after_date_filter", len(fetch["records"]))
+
+            if fetch["status"] != "ok":
+                logger.error("IPO unicorn hunt aborted — NSE IPO data unavailable: %s", fetch["error"])
+                return self._early_result(
+                    status="data_unavailable",
+                    hunt_note=(
+                        f"NSE IPO data unavailable ({fetch['error']}). This usually means "
+                        f"NSE's IPO endpoint rejected/blocked the request rather than there "
+                        f"being no IPOs — retry shortly, or pass an explicit symbol_list."
+                    ),
+                    funnel=funnel, lookback_months=lookback_months,
+                )
+
+            symbols = [r["symbol"] for r in fetch["records"] if r.get("symbol")]
+            ipo_by_symbol = {r["symbol"]: r for r in fetch["records"] if r.get("symbol")}
+
+            if not symbols:
+                logger.info("IPO unicorn hunt: 0 IPOs listed in the last %d days", funnel["lookback_days"])
+                return self._early_result(
+                    status="no_ipos_in_window",
+                    hunt_note=(
+                        f"NSE IPO data fetched successfully, but no IPOs were listed in the "
+                        f"last {lookback_months} months. Try widening lookback_months."
+                    ),
+                    funnel=funnel, lookback_months=lookback_months,
+                )
         else:
             symbols = symbol_list
+            funnel["nse_fetch"] = "skipped (explicit symbol_list)"
+            funnel["ipo_records_received"] = len(symbols)
+            funnel["after_date_filter"] = len(symbols)
 
-        if not symbols:
-            return {
-                "total_scanned": 0,
-                "passed_filter": 0,
-                "candidates": [],
-                "candidates_returned": 0,
-                "ipo_lookback_months": months if months is not None else self.cfg.ipo.lookback_months,
-                "hunt_note": (
-                    "No recently-listed IPOs found to scan. NSE's IPO endpoint may be "
-                    "unreachable, or none listed within the lookback window — try "
-                    "passing an explicit symbol_list."
-                ),
-            }
-
-        ipo_by_symbol = {r["symbol"]: r for r in ipo_records if r.get("symbol")}
+        logger.info(
+            "IPO unicorn hunt funnel | nse_fetch=%s | received=%d | after_date_filter=%d",
+            funnel["nse_fetch"], funnel["ipo_records_received"], funnel["after_date_filter"],
+        )
 
         # Delegate the actual fundamentals/growth/quality/theme scan to
         # UnicornHunterAgent — same framework as the broader unicorn hunt, scoped to
@@ -98,6 +136,7 @@ class IPOUnicornHunterAgent:
             top_n=len(symbols),
             progress_callback=progress_callback,
         )
+        funnel["unicorn_prefilter_passed"] = result.get("passed_filter", 0)
 
         for candidate in result["candidates"]:
             ipo_info = ipo_by_symbol.get(candidate["ticker"], {})
@@ -123,14 +162,50 @@ class IPOUnicornHunterAgent:
         result["candidates"].sort(key=lambda c: c.get("unicorn_composite", 0), reverse=True)
         result["candidates"] = result["candidates"][:top_n]
         result["candidates_returned"] = len(result["candidates"])
-        result["ipo_lookback_months"] = months if months is not None else self.cfg.ipo.lookback_months
-        result["hunt_note"] = (
-            f"Scanned {len(symbols)} IPOs listed within the last "
-            f"{result['ipo_lookback_months']} months. {result['passed_filter']} passed "
-            f"the growth + quality pre-filter. Ranked by unicorn composite score "
-            f"(growth × theme × quality × valuation) plus a listing-recency bonus."
+        result["ipo_lookback_months"] = lookback_months
+        funnel["unicorn_candidates"] = result["candidates_returned"]
+        result["funnel"] = funnel
+
+        logger.info(
+            "IPO unicorn hunt funnel | prefilter_passed=%d | candidates=%d",
+            funnel["unicorn_prefilter_passed"], funnel["unicorn_candidates"],
         )
+
+        if result["candidates_returned"] == 0:
+            result["status"] = "no_candidates"
+            result["hunt_note"] = (
+                f"{len(symbols)} IPOs found within the last {lookback_months} months, but none "
+                f"matched unicorn criteria — {funnel['unicorn_prefilter_passed']} passed the "
+                f"growth/quality pre-filter (market cap, revenue, debt) but none scored high "
+                f"enough, or yfinance had no usable data for the rest "
+                f"({result.get('fetch_failures', 0)} fetch failures). Not the same as "
+                f"'no IPOs found' — check result['funnel'] for where the pipeline narrowed."
+            )
+        else:
+            result["status"] = "ok"
+            result["hunt_note"] = (
+                f"Scanned {len(symbols)} IPOs listed within the last {lookback_months} months. "
+                f"{funnel['unicorn_prefilter_passed']} passed the growth + quality pre-filter. "
+                f"Ranked by unicorn composite score (growth × theme × quality × valuation) "
+                f"plus a listing-recency bonus."
+            )
         return result
+
+    @staticmethod
+    def _early_result(status: str, hunt_note: str, funnel: Dict[str, Any], lookback_months: int) -> Dict[str, Any]:
+        return {
+            "status": status,
+            "hunt_note": hunt_note,
+            "funnel": funnel,
+            "total_scanned": 0,
+            "passed_filter": 0,
+            "fetch_failures": 0,
+            "filtered_out": 0,
+            "candidates": [],
+            "candidates_returned": 0,
+            "theme_breakdown": {},
+            "ipo_lookback_months": lookback_months,
+        }
 
     def close(self):
         self.ipo_agent.close()

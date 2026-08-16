@@ -187,7 +187,7 @@ class PipelineConfig(BaseModel):
 
 
 class IPOConfig(BaseModel):
-    lookback_months: int = 12
+    lookback_months: int = 24
     default_top_n: int = 30
 
 
