@@ -146,6 +146,11 @@ class PortfolioScoringConfig(BaseModel):
     composite_weights: Dict[str, float]
 
 
+class IPOUnicornScoringConfig(BaseModel):
+    recency_bonus_tiers: List[Tier]
+    recency_bonus_no_match: float = 0.0
+
+
 class SynthesisScoringConfig(BaseModel):
     growth_tiers: List[Tier]
     growth_no_match: float
@@ -174,10 +179,16 @@ class ScoringConfig(BaseModel):
     unicorn: UnicornScoringConfig
     portfolio: PortfolioScoringConfig
     synthesis: SynthesisScoringConfig
+    ipo_unicorn: IPOUnicornScoringConfig
 
 
 class PipelineConfig(BaseModel):
     enabled_agents: List[str] = []
+
+
+class IPOConfig(BaseModel):
+    lookback_months: int = 12
+    default_top_n: int = 30
 
 
 class AppConfig(BaseModel):
@@ -193,6 +204,7 @@ class AppConfig(BaseModel):
     llm: LLMConfig
     scoring: ScoringConfig
     pipeline: PipelineConfig
+    ipo: IPOConfig
 
 
 def _build_app_config() -> AppConfig:
@@ -204,6 +216,7 @@ def _build_app_config() -> AppConfig:
     llm_yaml = yaml_data.get("llm", {})
     scoring_yaml = yaml_data.get("scoring", {})
     pipeline_yaml = yaml_data.get("pipeline", {})
+    ipo_yaml = yaml_data.get("ipo", {})
 
     broker = BrokerConfig(
         active_broker=os.getenv("ACTIVE_BROKER", broker_yaml.get("active_broker", "zerodha")),
@@ -242,6 +255,7 @@ def _build_app_config() -> AppConfig:
         llm=llm,
         scoring=ScoringConfig(**scoring_yaml),
         pipeline=PipelineConfig(**pipeline_yaml),
+        ipo=IPOConfig(**ipo_yaml),
     )
 
 

@@ -42,6 +42,10 @@ Portfolio caps (`scoring.portfolio`), risk red-flag thresholds and descriptions
 (`scoring.valuation.dcf_defaults`), and the final-rating classification thresholds
 (`scoring.synthesis`) all work the same way.
 
+The IPO Unicorn Hunt's "how recently listed" bonus (`scoring.ipo_unicorn.recency_bonus_tiers`)
+and its "what counts as recently listed" window (`ipo.lookback_months`, `ipo.default_top_n`)
+are configured the same way — see `src/agents/ipo_unicorn_hunter.py`.
+
 ## Adding a new enrichment agent — no orchestrator edit
 
 `Orchestrator` (`src/agents/orchestrator.py`) runs a mandatory sequential chain

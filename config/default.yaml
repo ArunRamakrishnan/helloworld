@@ -64,6 +64,12 @@ broker:
   # the ACTIVE_BROKER env var. One of: zerodha | upstox | angelone | dhan
   active_broker: zerodha
 
+ipo:
+  # "Currently listed" window for the IPO Unicorn Hunt universe — how many months
+  # back to look for recently-listed IPOs via IPODataAgent.fetch_recently_listed_ipos.
+  lookback_months: 12
+  default_top_n: 30
+
 scoring:
   fundamental:
     weights:
@@ -170,6 +176,13 @@ scoring:
     mid_cap_max_cr: 20000
     ten_x_candidate_threshold: 7.5
     quant_score_boost_cap: 3.0
+
+  ipo_unicorn:
+    # Bonus added to a freshly-listed IPO's unicorn composite score, tiered by days
+    # since listing (fresher listings score higher — "not yet discovered" thesis).
+    # mode: lte — evaluated ascending, first tier where days_since_listing <= threshold.
+    recency_bonus_tiers: [[30, 2.0], [90, 1.5], [180, 1.0], [365, 0.5]]
+    recency_bonus_no_match: 0.0
 
   portfolio:
     max_single_stock_pct:

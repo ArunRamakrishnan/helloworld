@@ -9,6 +9,8 @@ A safe, explainable AI-powered investment research platform for NSE/BSE Indian e
 - Screens Indian stocks across NSE and BSE using proven value-investing frameworks
 - Produces detailed research reports with confidence scores, risk scores, and evidence
 - Classifies stocks into: Long-term Compounders, Undervalued Value, Turnaround, Dividend, Momentum (Risky), Avoid/Watchlist
+- **IPO Watch**: SEBI-mandated IPO disclosures (issue price, size, dates) for current, upcoming, and recently-listed IPOs
+- **IPO Unicorn Hunt**: scores recently-listed IPOs for next-unicorn potential using the same investment frameworks as the rest of the platform
 - Defaults to **paper trading** — real orders require explicit user confirmation
 - Never promises returns or guarantees outcomes
 
@@ -46,6 +48,8 @@ for the full guide.
 | Portfolio Construction | Allocation bands based on user risk profile |
 | Broker Execution | Paper-trading default; real orders need confirmation |
 | Audit & Prompt Version | Tracks every change, prompt, commit, and test result |
+| IPO Data | Current/upcoming/recently-listed IPO details (SEBI disclosures via NSE) |
+| IPO Unicorn Hunter | Ranks recently-listed IPOs for next-unicorn potential |
 
 ## Investment Frameworks
 
