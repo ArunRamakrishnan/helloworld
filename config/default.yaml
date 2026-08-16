@@ -67,7 +67,9 @@ broker:
 ipo:
   # "Currently listed" window for the IPO Unicorn Hunt universe — how many months
   # back to look for recently-listed IPOs via IPODataAgent.fetch_recently_listed_ipos.
-  lookback_months: 12
+  # Defaults wide (24 months / ~730 days) so a first run has enough volume to validate
+  # the pipeline against; tighten once you've confirmed it's finding real candidates.
+  lookback_months: 24
   default_top_n: 30
 
 scoring:

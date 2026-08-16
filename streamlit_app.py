@@ -1,7 +1,7 @@
 """Indian Investment Research Wizard — Streamlit Dashboard."""
 import json
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import streamlit as st
 
@@ -630,9 +630,21 @@ def page_unicorn_hunt():
         st.caption(DISCLAIMER.replace("⚠️ **Disclaimer:** ", ""))
 
 
-def _ipo_table(records: List[Dict[str, Any]], empty_message: str):
-    if not records:
+def _ipo_table(fetch_result: Optional[Dict[str, Any]], empty_message: str):
+    """Renders one IPODataAgent fetch result — distinguishes 'not fetched yet',
+    'NSE unavailable' (with the real error), and 'fetched, genuinely empty'."""
+    if fetch_result is None:
         st.info(empty_message)
+        return
+    if fetch_result.get("status") != "ok":
+        st.error(
+            f"NSE IPO data unavailable: {fetch_result.get('error', 'unknown error')}. "
+            "This means the request to NSE failed/was blocked — not that there are no IPOs."
+        )
+        return
+    records = fetch_result.get("records", [])
+    if not records:
+        st.info("NSE responded successfully — no IPOs found in this category right now.")
         return
     import pandas as pd
     rows = [{
@@ -673,19 +685,19 @@ def page_ipo_watch():
 
     st.subheader("🟢 Currently Open")
     _ipo_table(
-        st.session_state.get("ipo_current", []),
+        st.session_state.get("ipo_current"),
         "No open IPOs loaded yet — click **Refresh IPO Lists** above.",
     )
 
     st.subheader("🔵 Upcoming")
     _ipo_table(
-        st.session_state.get("ipo_upcoming", []),
+        st.session_state.get("ipo_upcoming"),
         "No upcoming IPOs loaded yet — click **Refresh IPO Lists** above.",
     )
 
     st.subheader("⚪ Recently Listed")
     _ipo_table(
-        st.session_state.get("ipo_recent", []),
+        st.session_state.get("ipo_recent"),
         "No recently-listed IPOs loaded yet — click **Refresh IPO Lists** above.",
     )
 
@@ -699,7 +711,7 @@ def page_ipo_watch():
 
     col1, col2 = st.columns(2)
     with col1:
-        lookback_months = st.slider("Lookback window (months)", min_value=1, max_value=36, value=12)
+        lookback_months = st.slider("Lookback window (months)", min_value=1, max_value=48, value=24)
     with col2:
         top_n = st.slider("Top N IPO Unicorn Candidates", min_value=5, max_value=50, value=20, step=5)
 
@@ -716,7 +728,24 @@ def page_ipo_watch():
             result = hunter.hunt(months=lookback_months, top_n=top_n, progress_callback=on_progress)
 
         progress_bar.progress(1.0, text="Hunt complete!")
-        st.success(result.get("hunt_note", "Hunt complete."))
+
+        status = result.get("status", "ok")
+        note = result.get("hunt_note", "Hunt complete.")
+        if status == "data_unavailable":
+            st.error(f"⚠️ {note}")
+        elif status == "no_ipos_in_window":
+            st.warning(f"ℹ️ {note}")
+        elif status == "no_candidates":
+            st.warning(f"🔍 {note}")
+        else:
+            st.success(note)
+
+        with st.expander("🔬 Diagnosis funnel — where the pipeline narrowed"):
+            funnel = result.get("funnel", {})
+            if funnel:
+                st.table({"Stage": list(funnel.keys()), "Value": [str(v) for v in funnel.values()]})
+            else:
+                st.caption("No funnel data (explicit symbol_list was used).")
 
         col1, col2, col3 = st.columns(3)
         col1.metric("IPOs Scanned", result.get("total_scanned", 0))
@@ -762,12 +791,9 @@ def page_ipo_watch():
 
                     if c.get("business_description"):
                         st.caption(c["business_description"][:300])
-        else:
-            st.warning(
-                "No IPO unicorn candidates found. This usually means NSE's IPO endpoint "
-                "was unreachable, no IPOs listed within the lookback window, or all were "
-                "filtered out. Try widening the lookback window."
-            )
+        # else: no candidates — already explained precisely by the status banner
+        # (data_unavailable / no_ipos_in_window / no_candidates) above, plus the
+        # diagnosis funnel expander.
 
         st.divider()
         st.caption(DISCLAIMER.replace("⚠️ **Disclaimer:** ", ""))
