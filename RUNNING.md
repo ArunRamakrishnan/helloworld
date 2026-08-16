@@ -82,6 +82,21 @@ curl -X POST http://127.0.0.1:8000/api/v1/research/RELIANCE \
   }'
 ```
 
+## Try the IPO Watch / IPO Unicorn Hunt from the CLI
+
+```bash
+# SEBI/NSE/BSE IPO details — current, upcoming, and recently-listed
+curl http://127.0.0.1:8000/api/v1/ipo
+
+# Start an async IPO Unicorn Hunt (returns a job_id to poll)
+curl -X POST http://127.0.0.1:8000/api/v1/ipo/unicorn-hunt \
+  -H "Content-Type: application/json" \
+  -d '{"lookback_months": 12, "top_n": 20}'
+
+# Poll for results
+curl http://127.0.0.1:8000/api/v1/ipo/unicorn-hunt/<job_id>
+```
+
 ## Notes
 
 - **Paper trading is on by default** (`PAPER_TRADING=true` in `.env`) — no real

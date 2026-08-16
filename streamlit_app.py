@@ -10,6 +10,8 @@ from src.agents.daily_report import DailyReportOrchestrator
 from src.agents.universe_scan import UniverseScanOrchestrator
 from src.agents.universe_screener import NIFTY100_FALLBACK
 from src.agents.unicorn_hunter import UnicornHunterAgent, UNICORN_UNIVERSE
+from src.agents.ipo_agent import IPODataAgent
+from src.agents.ipo_unicorn_hunter import IPOUnicornHunterAgent
 from src.utils.config import get_config
 
 st.set_page_config(
@@ -628,6 +630,149 @@ def page_unicorn_hunt():
         st.caption(DISCLAIMER.replace("⚠️ **Disclaimer:** ", ""))
 
 
+def _ipo_table(records: List[Dict[str, Any]], empty_message: str):
+    if not records:
+        st.info(empty_message)
+        return
+    import pandas as pd
+    rows = [{
+        "Symbol": r.get("symbol") or "—",
+        "Company": (r.get("company_name") or "—")[:35],
+        "Series": r.get("series", "—"),
+        "Price Band": (
+            f"₹{r['issue_price_min']:.0f}–₹{r['issue_price_max']:.0f}"
+            if r.get("issue_price_min") and r.get("issue_price_max") else "—"
+        ),
+        "Open": r.get("open_date") or "—",
+        "Close": r.get("close_date") or "—",
+        "Listing Date": r.get("listing_date") or "—",
+        "Days Since Listing": r.get("days_since_listing", "—"),
+    } for r in records]
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+
+def page_ipo_watch():
+    st.header("📋 IPO Watch — SEBI / NSE / BSE IPO Details")
+    st.markdown(DISCLAIMER)
+    st.info(
+        "IPO issue price, size, and dates are SEBI-mandated disclosures, surfaced here "
+        "via NSE's public IPO endpoints (BSE has no comparably stable public JSON "
+        "endpoint — cross-check bseindia.com/publicissue for BSE-only issues)."
+    )
+    st.divider()
+
+    if st.button("🔄 Refresh IPO Lists", type="primary"):
+        agent = IPODataAgent(config=get_config())
+        try:
+            with st.spinner("Fetching current, upcoming, and recently-listed IPOs..."):
+                st.session_state["ipo_current"] = agent.fetch_current_ipos()
+                st.session_state["ipo_upcoming"] = agent.fetch_upcoming_ipos()
+                st.session_state["ipo_recent"] = agent.fetch_recently_listed_ipos()
+        finally:
+            agent.close()
+
+    st.subheader("🟢 Currently Open")
+    _ipo_table(
+        st.session_state.get("ipo_current", []),
+        "No open IPOs loaded yet — click **Refresh IPO Lists** above.",
+    )
+
+    st.subheader("🔵 Upcoming")
+    _ipo_table(
+        st.session_state.get("ipo_upcoming", []),
+        "No upcoming IPOs loaded yet — click **Refresh IPO Lists** above.",
+    )
+
+    st.subheader("⚪ Recently Listed")
+    _ipo_table(
+        st.session_state.get("ipo_recent", []),
+        "No recently-listed IPOs loaded yet — click **Refresh IPO Lists** above.",
+    )
+
+    st.divider()
+    st.header("🦄 IPO Unicorn Hunt — Next NIFTY 50 Among Fresh Listings")
+    st.info(
+        "Loads all IPOs listed within the lookback window and scores them for "
+        "next-unicorn potential using the same growth/quality/theme framework as the "
+        "regular Unicorn Hunt, plus a bonus for how recently they listed."
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        lookback_months = st.slider("Lookback window (months)", min_value=1, max_value=36, value=12)
+    with col2:
+        top_n = st.slider("Top N IPO Unicorn Candidates", min_value=5, max_value=50, value=20, step=5)
+
+    if st.button("🚀 Start IPO Unicorn Hunt", type="primary"):
+        hunter = IPOUnicornHunterAgent(config=get_config())
+
+        progress_bar = st.progress(0, text="Loading recently-listed IPOs...")
+
+        def on_progress(done, total):
+            pct_done = done / total if total else 0
+            progress_bar.progress(pct_done, text=f"Scanning {done}/{total} IPOs...")
+
+        with st.spinner("Hunting for the next unicorn among fresh listings..."):
+            result = hunter.hunt(months=lookback_months, top_n=top_n, progress_callback=on_progress)
+
+        progress_bar.progress(1.0, text="Hunt complete!")
+        st.success(result.get("hunt_note", "Hunt complete."))
+
+        col1, col2, col3 = st.columns(3)
+        col1.metric("IPOs Scanned", result.get("total_scanned", 0))
+        col2.metric("Passed Filters", result.get("passed_filter", 0))
+        col3.metric("Returned", result.get("candidates_returned", 0))
+
+        st.divider()
+
+        if result["candidates"]:
+            st.subheader(f"🏆 Top {len(result['candidates'])} IPO Unicorn Candidates")
+
+            import pandas as pd
+            rows = []
+            for i, c in enumerate(result["candidates"], 1):
+                rows.append({
+                    "#": i,
+                    "Ticker": c["ticker"],
+                    "Name": c.get("name", c["ticker"])[:25],
+                    "Listed": c.get("ipo_listing_date") or "—",
+                    "Days Since Listing": c.get("days_since_listing", "—"),
+                    "Listing Gain": pct((c.get("listing_gain_pct") or 0) / 100) if c.get("listing_gain_pct") is not None else "—",
+                    "Rev Growth": pct(c.get("revenue_growth_yoy")),
+                    "Recency Bonus": f"+{c.get('ipo_recency_bonus', 0):.1f}",
+                    "Composite": f"{c.get('unicorn_composite', 0):.2f}",
+                })
+            st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+            st.divider()
+            st.subheader("🔍 Candidate Details")
+            for i, c in enumerate(result["candidates"][:10], 1):
+                with st.expander(f"#{i} {c['ticker']} — {c.get('name', '')} | Score: {c.get('unicorn_composite', 0):.2f}"):
+                    c1, c2, c3 = st.columns(3)
+                    c1.metric("Market Cap", f"₹{c.get('market_cap_cr', 0):,.0f} Cr")
+                    c1.metric("Current Price", f"₹{c.get('current_price', 0):,.2f}")
+                    c2.metric("Issue Price (max)", f"₹{c.get('ipo_issue_price_max', 0) or 0:,.2f}")
+                    c2.metric("Listing Gain", pct((c.get("listing_gain_pct") or 0) / 100) if c.get("listing_gain_pct") is not None else "—")
+                    c3.metric("Days Since Listing", c.get("days_since_listing", "—"))
+                    c3.metric("Recency Bonus", f"+{c.get('ipo_recency_bonus', 0):.1f}")
+
+                    st.write(f"**Sector:** {c.get('sector', '—')} | **Industry:** {c.get('industry', '—')}")
+                    st.write(f"**Emerging Themes:** {', '.join(c.get('emerging_themes', [])) or 'None detected'}")
+                    st.write(f"Composite Score: {score_bar(c.get('unicorn_composite'))}")
+
+                    if c.get("business_description"):
+                        st.caption(c["business_description"][:300])
+        else:
+            st.warning(
+                "No IPO unicorn candidates found. This usually means NSE's IPO endpoint "
+                "was unreachable, no IPOs listed within the lookback window, or all were "
+                "filtered out. Try widening the lookback window."
+            )
+
+        st.divider()
+        st.caption(DISCLAIMER.replace("⚠️ **Disclaimer:** ", ""))
+
+
 def page_about():
     st.header("ℹ️ About the Investment Research Wizard")
     st.markdown("""
@@ -674,7 +819,7 @@ st.sidebar.caption("NSE/BSE · AI-Powered · Paper Trading")
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Single Stock Research", "Morning Report", "Universe Scanner", "Unicorn Hunt", "About"],
+    ["Single Stock Research", "Morning Report", "Universe Scanner", "Unicorn Hunt", "IPO Watch", "About"],
     index=0,
 )
 
@@ -690,5 +835,7 @@ elif page == "Universe Scanner":
     page_universe_scanner()
 elif page == "Unicorn Hunt":
     page_unicorn_hunt()
+elif page == "IPO Watch":
+    page_ipo_watch()
 else:
     page_about()

@@ -14,6 +14,8 @@ from src.agents.unicorn_detector import UnicornDetectorAgent
 from src.agents.daily_report import DailyReportOrchestrator
 from src.agents.universe_scan import UniverseScanOrchestrator
 from src.agents.unicorn_hunter import UnicornHunterAgent, UNICORN_UNIVERSE
+from src.agents.ipo_agent import IPODataAgent
+from src.agents.ipo_unicorn_hunter import IPOUnicornHunterAgent
 from src.api import job_store
 from src.utils.config import get_config
 from src.utils.logger import get_logger
@@ -521,3 +523,142 @@ def list_scan_jobs(limit: int = Query(20, ge=1, le=50)) -> Dict[str, Any]:
         "jobs": job_store.list_jobs(limit=limit),
         "note": "Poll GET /api/v1/scan/universe/{job_id} to get full results for a completed job.",
     }
+
+
+# ------------------------------------------------------------------
+# IPO endpoints — SEBI/NSE/BSE IPO details + IPO Unicorn Hunt (async)
+# ------------------------------------------------------------------
+
+@router.get(
+    "/ipo",
+    summary="Current, upcoming, and recently-listed IPOs (NSE public IPO data)",
+)
+def list_ipos(
+    lookback_months: Optional[int] = Query(
+        None, ge=1, le=60,
+        description="How many months back counts as 'recently listed'. Defaults to config.ipo.lookback_months.",
+    ),
+) -> Dict[str, Any]:
+    """
+    Returns SEBI-mandated IPO disclosures (issue price band, size, dates) as surfaced
+    by NSE's public IPO endpoints, grouped into open / upcoming / recently listed.
+    See docs/integrations.md for what's covered (and the BSE/SEBI data-source gap).
+    """
+    agent = IPODataAgent(config=cfg)
+    try:
+        return {
+            "current": agent.fetch_current_ipos(),
+            "upcoming": agent.fetch_upcoming_ipos(),
+            "recently_listed": agent.fetch_recently_listed_ipos(months=lookback_months),
+            "disclaimer": DISCLAIMER,
+        }
+    finally:
+        agent.close()
+
+
+class IPOUnicornHuntRequest(BaseModel):
+    symbol_list: Optional[List[str]] = Field(
+        None,
+        description="Override list of NSE symbols. If omitted, pulled live from recently-listed IPOs.",
+    )
+    lookback_months: Optional[int] = Field(
+        None,
+        ge=1,
+        le=60,
+        description="How many months back counts as 'recently listed'. Defaults to config.ipo.lookback_months.",
+    )
+    top_n: int = Field(
+        30,
+        ge=5,
+        le=100,
+        description="Return top N IPO unicorn candidates. Default: config.ipo.default_top_n.",
+    )
+
+
+def _run_ipo_hunt_background(job_id: str, request_params: Dict[str, Any]):
+    """Background thread worker for IPO unicorn hunt."""
+    job_store.start_job(job_id)
+    try:
+        hunter = IPOUnicornHunterAgent(config=cfg)
+
+        def progress(done, total):
+            job_store.update_progress(job_id, "ipo_unicorn_hunt", done, total, f"Scanned {done}/{total}")
+
+        result = hunter.hunt(
+            symbol_list=request_params.get("symbol_list"),
+            months=request_params.get("lookback_months"),
+            top_n=request_params.get("top_n"),
+            progress_callback=progress,
+        )
+        job_store.complete_job(job_id, result)
+        logger.info("IPO unicorn hunt job %s complete", job_id)
+    except Exception as exc:
+        logger.error("IPO unicorn hunt job %s failed: %s", job_id, exc)
+        job_store.fail_job(job_id, str(exc))
+
+
+@router.post(
+    "/ipo/unicorn-hunt",
+    summary="Hunt for the next unicorn among recently-listed IPOs (async)",
+)
+def start_ipo_unicorn_hunt(body: IPOUnicornHuntRequest) -> Dict[str, Any]:
+    """
+    Loads all IPOs listed within the lookback window and scores them for next-unicorn
+    potential using the same growth/quality/theme framework as /scan/unicorns
+    (UnicornHunterAgent), plus a listing-recency bonus.
+
+    Returns a job_id immediately. Poll GET /ipo/unicorn-hunt/{job_id} for results.
+    """
+    params = body.model_dump()
+    job_id = job_store.create_job(job_type="ipo_unicorn_hunt", params={
+        "lookback_months": params.get("lookback_months"),
+        "top_n": params["top_n"],
+        "symbol_count": len(params.get("symbol_list") or []),
+    })
+
+    thread = threading.Thread(
+        target=_run_ipo_hunt_background,
+        args=(job_id, params),
+        daemon=True,
+        name=f"ipo-hunt-{job_id[:8]}",
+    )
+    thread.start()
+
+    return {
+        "job_id": job_id,
+        "status": "pending",
+        "message": (
+            "IPO unicorn hunt started across recently-listed IPOs. "
+            f"Poll GET /api/v1/ipo/unicorn-hunt/{job_id} for progress and results."
+        ),
+        "poll_url": f"/api/v1/ipo/unicorn-hunt/{job_id}",
+        "disclaimer": DISCLAIMER,
+    }
+
+
+@router.get(
+    "/ipo/unicorn-hunt/{job_id}",
+    summary="Get IPO unicorn hunt job status and results",
+)
+def get_ipo_unicorn_hunt(job_id: str) -> Dict[str, Any]:
+    """Poll this endpoint after starting a hunt with POST /ipo/unicorn-hunt."""
+    job = job_store.get_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+
+    response: Dict[str, Any] = {
+        "job_id": job["job_id"],
+        "status": job["status"],
+        "created_at": job["created_at"],
+        "started_at": job.get("started_at"),
+        "completed_at": job.get("completed_at"),
+        "progress": job["progress"],
+    }
+
+    if job["status"] == "failed":
+        response["error"] = job.get("error")
+    elif job["status"] == "complete":
+        response["result"] = job["result"]
+        response["disclaimer"] = DISCLAIMER
+
+    return response

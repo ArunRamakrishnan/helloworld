@@ -20,6 +20,7 @@ for how config/secrets are layered.
 | 9 | Upstox API v2 | Broker | Place/cancel orders | Yes — `UPSTOX_API_KEY` / `UPSTOX_API_SECRET` |
 | 10 | Angel One SmartAPI | Broker | Place/cancel orders | Yes — `ANGEL_API_KEY` / `ANGEL_CLIENT_ID` |
 | 11 | DhanHQ | Broker | Place/cancel orders | Yes — `DHAN_CLIENT_ID` / `DHAN_ACCESS_TOKEN` |
+| 12 | NSE IPO endpoints (current / upcoming / past issues) | Market data | IPO Watch + IPO Unicorn Hunt universe | No |
 
 ## LLM
 
@@ -65,6 +66,21 @@ for how config/secrets are layered.
 - **Fallback:** a feed that's unreachable is silently skipped; overall sentiment
   falls back to keyword-based scoring if no headlines are found or the LLM is
   unavailable
+
+### 12. NSE IPO endpoints
+- **Used by:** `src/agents/ipo_agent.py::IPODataAgent`
+- **Endpoints:** `ipo-current-issue`, `all-upcoming-issues?category=ipo`,
+  `public-past-issues` (all under `https://www.nseindia.com/api/`), public, no key
+- **Purpose:** current/upcoming/recently-listed IPO details — issue price band, size,
+  open/close/listing dates. These are SEBI-mandated disclosures; SEBI itself doesn't
+  expose a structured public API, so NSE's exchange-side surfacing of them is the
+  integration point (same rationale as `fetch_nse_stock_list`). BSE has an IPO page
+  but no comparably stable public JSON endpoint — each returned record carries a
+  `bse_note` flagging this gap rather than silently only covering NSE.
+- **Feeds:** the `/api/v1/ipo` endpoint and `IPOUnicornHunterAgent`'s candidate
+  universe (`recently_listed` results within `config.ipo.lookback_months`)
+- **Fallback:** returns an empty list per-endpoint on failure; `IPOUnicornHunterAgent`
+  returns a graceful "no IPOs found" result rather than erroring if the universe is empty
 
 ## Brokers
 

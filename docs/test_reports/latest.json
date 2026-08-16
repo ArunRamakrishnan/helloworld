@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-16T13:15:57.710645",
+  "generated_at": "2026-08-16T14:20:17.757163",
   "summary": {
-    "total": 400,
-    "passed": 400,
+    "total": 420,
+    "passed": 420,
     "failed": 0,
     "skipped": 0
   },
@@ -77,19 +77,19 @@
       {
         "test": "tests/test_config.py::TestLoadYamlConfig::test_default_only_when_env_file_missing",
         "status": "PASSED",
-        "duration_ms": 0.4,
+        "duration_ms": 0.7,
         "error": null
       },
       {
         "test": "tests/test_config.py::TestLoadYamlConfig::test_env_file_overrides_default",
         "status": "PASSED",
-        "duration_ms": 0.6,
+        "duration_ms": 0.7,
         "error": null
       },
       {
         "test": "tests/test_config.py::TestLoadYamlConfig::test_env_var_interpolation",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.6,
         "error": null
       },
       {
@@ -113,7 +113,7 @@
       {
         "test": "tests/test_config.py::TestConfigPrecedence::test_paper_trading_env_var_parsed_as_bool",
         "status": "PASSED",
-        "duration_ms": 12.7,
+        "duration_ms": 12.0,
         "error": null
       },
       {
@@ -123,9 +123,39 @@
         "error": null
       },
       {
+        "test": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_returns_empty_result_when_no_ipos_found",
+        "status": "PASSED",
+        "duration_ms": 0.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_reranks_by_composite_after_recency_bonus",
+        "status": "PASSED",
+        "duration_ms": 0.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_respects_top_n_truncation",
+        "status": "PASSED",
+        "duration_ms": 1.0,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_uses_explicit_symbol_list_without_fetching_ipos",
+        "status": "PASSED",
+        "duration_ms": 0.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_close_does_not_raise",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
         "test": "tests/test_phase2_agents.py::TestPhilipFisherAgent::test_analyze_with_llm",
         "status": "PASSED",
-        "duration_ms": 43.7,
+        "duration_ms": 64.6,
         "error": null
       },
       {
@@ -137,7 +167,7 @@
       {
         "test": "tests/test_phase2_agents.py::TestPhilipFisherAgent::test_llm_failure_falls_back",
         "status": "PASSED",
-        "duration_ms": 42.4,
+        "duration_ms": 48.2,
         "error": null
       },
       {
@@ -149,7 +179,7 @@
       {
         "test": "tests/test_phase2_agents.py::TestPhilipFisherAgent::test_llm_json_parse_error_falls_back",
         "status": "PASSED",
-        "duration_ms": 43.1,
+        "duration_ms": 47.5,
         "error": null
       },
       {
@@ -161,79 +191,79 @@
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_analyze_with_llm_no_rss",
         "status": "PASSED",
-        "duration_ms": 84.5,
+        "duration_ms": 107.3,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_analyze_fallback_no_llm",
         "status": "PASSED",
-        "duration_ms": 40.6,
+        "duration_ms": 45.4,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_rule_based_bullish",
         "status": "PASSED",
-        "duration_ms": 40.2,
+        "duration_ms": 43.6,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_rule_based_bearish",
         "status": "PASSED",
-        "duration_ms": 40.5,
+        "duration_ms": 43.8,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_rule_based_hype_detection",
         "status": "PASSED",
-        "duration_ms": 40.4,
+        "duration_ms": 44.0,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_rss_fetch_network_error_handled",
         "status": "PASSED",
-        "duration_ms": 40.0,
+        "duration_ms": 42.8,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_rss_fetch_filters_by_ticker",
         "status": "PASSED",
-        "duration_ms": 45.3,
+        "duration_ms": 47.5,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_rss_non_200_skipped",
         "status": "PASSED",
-        "duration_ms": 41.2,
+        "duration_ms": 44.1,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_analyze_with_extra_articles",
         "status": "PASSED",
-        "duration_ms": 40.5,
+        "duration_ms": 44.2,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_llm_failure_falls_back",
         "status": "PASSED",
-        "duration_ms": 79.6,
+        "duration_ms": 87.4,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestSentimentAgent::test_close",
         "status": "PASSED",
-        "duration_ms": 40.2,
+        "duration_ms": 43.2,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_analyze_small_cap_with_llm",
         "status": "PASSED",
-        "duration_ms": 42.9,
+        "duration_ms": 45.4,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_analyze_large_cap_fallback",
         "status": "PASSED",
-        "duration_ms": 0.4,
+        "duration_ms": 0.3,
         "error": null
       },
       {
@@ -275,13 +305,13 @@
       {
         "test": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_llm_failure_falls_back",
         "status": "PASSED",
-        "duration_ms": 42.1,
+        "duration_ms": 46.8,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_mid_cap_label",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.4,
         "error": null
       },
       {
@@ -335,7 +365,7 @@
       {
         "test": "tests/test_phase2_agents.py::TestScoringFunctions::test_pick_top_returns_n",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -407,7 +437,7 @@
       {
         "test": "tests/test_unicorn_hunter.py::test_parse_info_basic",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -491,49 +521,49 @@
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_returns_expected_keys",
         "status": "PASSED",
-        "duration_ms": 1.6,
+        "duration_ms": 1.9,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_all_filtered_out",
         "status": "PASSED",
-        "duration_ms": 1.3,
+        "duration_ms": 1.4,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_fetch_failure_counted",
         "status": "PASSED",
-        "duration_ms": 0.9,
+        "duration_ms": 1.0,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_top_n_respected",
         "status": "PASSED",
-        "duration_ms": 3.0,
+        "duration_ms": 3.8,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_sorted_by_composite",
         "status": "PASSED",
-        "duration_ms": 1.6,
+        "duration_ms": 1.5,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_theme_breakdown_structure",
         "status": "PASSED",
-        "duration_ms": 1.3,
+        "duration_ms": 1.0,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_progress_callback_called",
         "status": "PASSED",
-        "duration_ms": 1.5,
+        "duration_ms": 1.4,
         "error": null
       },
       {
         "test": "tests/test_unicorn_hunter.py::test_hunt_uses_unicorn_universe_by_default",
         "status": "PASSED",
-        "duration_ms": 7.9,
+        "duration_ms": 7.8,
         "error": null
       },
       {
@@ -545,7 +575,7 @@
       {
         "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_parse_info_converts_units_correctly",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -593,25 +623,25 @@
       {
         "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_with_mocked_fetch",
         "status": "PASSED",
-        "duration_ms": 1.9,
+        "duration_ms": 1.7,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_all_fetch_failures",
         "status": "PASSED",
-        "duration_ms": 1.7,
+        "duration_ms": 1.2,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_progress_callback",
         "status": "PASSED",
-        "duration_ms": 1.3,
+        "duration_ms": 1.1,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_get_symbol_list_fallback",
         "status": "PASSED",
-        "duration_ms": 44.2,
+        "duration_ms": 35.6,
         "error": null
       },
       {
@@ -635,7 +665,7 @@
       {
         "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_returns_error_on_fetch_failure",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.4,
         "error": null
       },
       {
@@ -695,7 +725,7 @@
       {
         "test": "tests/test_universe_scan.py::TestJobStore::test_update_progress",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.1,
         "error": null
       },
       {
@@ -719,7 +749,7 @@
       {
         "test": "tests/test_universe_scan.py::TestJobStore::test_thread_safety",
         "status": "PASSED",
-        "duration_ms": 5.0,
+        "duration_ms": 4.7,
         "error": null
       },
       {
@@ -745,25 +775,25 @@
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_returns_all_dimensions",
         "status": "PASSED",
-        "duration_ms": 0.8,
+        "duration_ms": 1.3,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_is_5_for_all",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.9,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_in_range",
         "status": "PASSED",
-        "duration_ms": 0.6,
+        "duration_ms": 0.9,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_max_inputs_gives_near_10",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.9,
         "error": null
       },
       {
@@ -775,49 +805,49 @@
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_without_llm_uses_fallback",
         "status": "PASSED",
-        "duration_ms": 0.8,
+        "duration_ms": 1.0,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_success",
         "status": "PASSED",
-        "duration_ms": 46.8,
+        "duration_ms": 56.0,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_fallback_on_error",
         "status": "PASSED",
-        "duration_ms": 45.1,
+        "duration_ms": 55.6,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_returns_ticker",
         "status": "PASSED",
-        "duration_ms": 0.7,
+        "duration_ms": 1.0,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_empty_articles_returns_neutral",
         "status": "PASSED",
-        "duration_ms": 0.7,
+        "duration_ms": 0.9,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_positive_sentiment",
         "status": "PASSED",
-        "duration_ms": 0.6,
+        "duration_ms": 0.5,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_negative_sentiment",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.7,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_mixed_sentiment",
         "status": "PASSED",
-        "duration_ms": 0.4,
+        "duration_ms": 0.6,
         "error": null
       },
       {
@@ -829,19 +859,19 @@
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_success",
         "status": "PASSED",
-        "duration_ms": 45.9,
+        "duration_ms": 54.9,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_fallback_on_error",
         "status": "PASSED",
-        "duration_ms": 45.6,
+        "duration_ms": 45.5,
         "error": null
       },
       {
         "test": "tests/test_moat_news_agents.py::TestNewsAgent::test_format_articles_caps_at_20",
         "status": "PASSED",
-        "duration_ms": 0.6,
+        "duration_ms": 3.0,
         "error": null
       }
     ],
@@ -849,97 +879,97 @@
       {
         "test": "tests/test_api.py::test_health_returns_ok",
         "status": "PASSED",
-        "duration_ms": 4.7,
+        "duration_ms": 5.0,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_categories_returns_six_categories",
         "status": "PASSED",
-        "duration_ms": 3.9,
+        "duration_ms": 4.2,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_categories_has_disclaimer",
         "status": "PASSED",
-        "duration_ms": 3.5,
+        "duration_ms": 3.4,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_disclaimer_endpoint",
         "status": "PASSED",
-        "duration_ms": 3.2,
+        "duration_ms": 3.0,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_order_preview_returns_preview",
         "status": "PASSED",
-        "duration_ms": 5.7,
+        "duration_ms": 5.5,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_order_preview_shows_paper_trade_mode",
         "status": "PASSED",
-        "duration_ms": 4.0,
+        "duration_ms": 3.1,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_order_place_rejected_without_confirmation",
         "status": "PASSED",
-        "duration_ms": 2.9,
+        "duration_ms": 3.4,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_order_place_accepted_with_confirmation",
         "status": "PASSED",
-        "duration_ms": 3.7,
+        "duration_ms": 3.5,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_order_place_rejected_insufficient_funds",
         "status": "PASSED",
-        "duration_ms": 3.2,
+        "duration_ms": 3.1,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_order_side_validation",
         "status": "PASSED",
-        "duration_ms": 2.2,
+        "duration_ms": 2.1,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_paper_log_returns_list",
         "status": "PASSED",
-        "duration_ms": 2.9,
+        "duration_ms": 2.7,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_research_returns_200",
         "status": "PASSED",
-        "duration_ms": 1115.8,
+        "duration_ms": 1204.8,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_research_contains_disclaimer",
         "status": "PASSED",
-        "duration_ms": 5193.8,
+        "duration_ms": 1153.1,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_research_invalid_ticker_in_body_returns_400",
         "status": "PASSED",
-        "duration_ms": 91.7,
+        "duration_ms": 80.8,
         "error": null
       },
       {
         "test": "tests/test_api.py::test_research_scores_in_range",
         "status": "PASSED",
-        "duration_ms": 1231.0,
+        "duration_ms": 1176.2,
         "error": null
       },
       {
         "test": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_research_500_on_unexpected_error",
         "status": "PASSED",
-        "duration_ms": 7.4,
+        "duration_ms": 5.0,
         "error": null
       },
       {
@@ -953,19 +983,19 @@
       {
         "test": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_string",
         "status": "PASSED",
-        "duration_ms": 2.3,
+        "duration_ms": 2.4,
         "error": null
       },
       {
         "test": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_unknown_on_failure",
         "status": "PASSED",
-        "duration_ms": 0.9,
+        "duration_ms": 0.7,
         "error": null
       },
       {
         "test": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_creates_prompt_file",
         "status": "PASSED",
-        "duration_ms": 3.1,
+        "duration_ms": 3.4,
         "error": null
       },
       {
@@ -977,13 +1007,13 @@
       {
         "test": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_increments_version",
         "status": "PASSED",
-        "duration_ms": 4.7,
+        "duration_ms": 4.6,
         "error": null
       },
       {
         "test": "tests/test_audit_agent.py::TestAuditAgent::test_changelog_is_updated",
         "status": "PASSED",
-        "duration_ms": 2.3,
+        "duration_ms": 2.6,
         "error": null
       },
       {
@@ -995,7 +1025,7 @@
       {
         "test": "tests/test_audit_agent.py::TestAuditAgent::test_backtest_result_included_when_provided",
         "status": "PASSED",
-        "duration_ms": 2.4,
+        "duration_ms": 2.2,
         "error": null
       }
     ],
@@ -1003,7 +1033,7 @@
       {
         "test": "tests/test_broker_agent.py::TestOrderRequest::test_valid_order_request",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -1051,61 +1081,61 @@
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_is_paper_trading_by_default",
         "status": "PASSED",
-        "duration_ms": 2.2,
+        "duration_ms": 0.9,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_order_rejected_without_confirmation",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.7,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_order_placed_with_confirmation",
         "status": "PASSED",
-        "duration_ms": 0.7,
+        "duration_ms": 1.0,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_insufficient_funds_rejected",
         "status": "PASSED",
-        "duration_ms": 0.7,
+        "duration_ms": 0.6,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_trade_log_records_order",
         "status": "PASSED",
-        "duration_ms": 0.7,
+        "duration_ms": 0.6,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_multiple_orders_in_log",
         "status": "PASSED",
-        "duration_ms": 0.9,
+        "duration_ms": 1.0,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_preview_shows_paper_trade_mode",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.6,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_paper_trade_with_confirmation",
         "status": "PASSED",
-        "duration_ms": 0.4,
+        "duration_ms": 0.6,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_without_confirmation_rejected",
         "status": "PASSED",
-        "duration_ms": 0.5,
+        "duration_ms": 0.6,
         "error": null
       },
       {
         "test": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_disclaimer_always_in_preview",
         "status": "PASSED",
-        "duration_ms": 0.4,
+        "duration_ms": 0.5,
         "error": null
       },
       {
@@ -1159,7 +1189,7 @@
       {
         "test": "tests/test_broker_factory.py::TestBrokerFactory::test_unimplemented_holdings_raises_not_implemented",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.1,
         "error": null
       },
       {
@@ -1171,7 +1201,7 @@
       {
         "test": "tests/test_config.py::TestConfigPrecedence::test_active_broker_env_var_overrides_yaml",
         "status": "PASSED",
-        "duration_ms": 11.5,
+        "duration_ms": 13.1,
         "error": null
       }
     ],
@@ -1449,7 +1479,7 @@
       {
         "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_statements",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.4,
         "error": null
       },
       {
@@ -1461,7 +1491,7 @@
       {
         "test": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_quarterly_only_returns_none_cagr",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.1,
         "error": null
       }
     ],
@@ -1619,7 +1649,7 @@
       {
         "test": "tests/test_valuation_agent.py::TestValuationAgent::test_ev_ebitda_normal",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.1,
         "error": null
       },
       {
@@ -1703,7 +1733,7 @@
       {
         "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_positive_fcf",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.4,
         "error": null
       },
       {
@@ -1721,7 +1751,7 @@
       {
         "test": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_custom_margin_of_safety",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -1747,7 +1777,7 @@
       {
         "test": "tests/test_coverage_gaps.py::TestPortfolioAgentGaps::test_sector_weight_clamped_when_sector_nearly_full",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.3,
         "error": null
       },
       {
@@ -1759,7 +1789,7 @@
       {
         "test": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_portfolio_suggest_endpoint",
         "status": "PASSED",
-        "duration_ms": 5.1,
+        "duration_ms": 4.9,
         "error": null
       },
       {
@@ -1789,31 +1819,31 @@
       {
         "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_suggest_allocation_returns_allocations",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.3,
         "error": null
       },
       {
         "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_pct_not_exceed_single_stock_limit",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
         "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_total_not_exceed_100",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
         "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_same_sector_concentration_limited",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
         "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_disclaimer_always_present",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -1837,7 +1867,7 @@
       {
         "test": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_amount_matches_pct",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       }
     ],
@@ -1863,7 +1893,7 @@
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_avoid_high_risk",
         "status": "PASSED",
-        "duration_ms": 99.0,
+        "duration_ms": 91.3,
         "error": null
       },
       {
@@ -1875,7 +1905,7 @@
       {
         "test": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_avoid_list_excludes_strong_candidates_with_low_risk",
         "status": "PASSED",
-        "duration_ms": 80.9,
+        "duration_ms": 89.0,
         "error": null
       },
       {
@@ -1887,19 +1917,19 @@
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_high_debt_flag_detected",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_negative_fcf_flag_detected",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_high_promoter_pledge_flag",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -1911,7 +1941,7 @@
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_overvalued_pe_flag",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -1923,13 +1953,13 @@
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_governance_issue_flag",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_sudden_price_spike_flag",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -1977,7 +2007,7 @@
       {
         "test": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_returns_all_keys",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.3,
         "error": null
       },
       {
@@ -2027,121 +2057,121 @@
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_research_returns_all_required_keys",
         "status": "PASSED",
-        "duration_ms": 1106.7,
+        "duration_ms": 1249.8,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_disclaimer_always_present",
         "status": "PASSED",
-        "duration_ms": 1102.7,
+        "duration_ms": 1113.2,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_final_rating_is_valid_value",
         "status": "PASSED",
-        "duration_ms": 1049.2,
+        "duration_ms": 1065.5,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_scores_are_in_range",
         "status": "PASSED",
-        "duration_ms": 977.9,
+        "duration_ms": 1013.8,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_invalid_ticker_raises",
         "status": "PASSED",
-        "duration_ms": 87.3,
+        "duration_ms": 91.8,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_high_growth",
         "status": "PASSED",
-        "duration_ms": 84.7,
+        "duration_ms": 90.3,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_low_growth",
         "status": "PASSED",
-        "duration_ms": 85.6,
+        "duration_ms": 91.6,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_strong_candidate",
         "status": "PASSED",
-        "duration_ms": 85.6,
+        "duration_ms": 92.3,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_with_mock",
         "status": "PASSED",
-        "duration_ms": 339.1,
+        "duration_ms": 399.5,
         "error": null
       },
       {
         "test": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_falls_back_on_error",
         "status": "PASSED",
-        "duration_ms": 321.7,
+        "duration_ms": 480.1,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_run_single_stock",
         "status": "PASSED",
-        "duration_ms": 121.2,
+        "duration_ms": 140.1,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_run_failed_stock_included_as_error",
         "status": "PASSED",
-        "duration_ms": 76.7,
+        "duration_ms": 88.7,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_run_multiple_stocks",
         "status": "PASSED",
-        "duration_ms": 82.5,
+        "duration_ms": 88.2,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_report_structure",
         "status": "PASSED",
-        "duration_ms": 84.2,
+        "duration_ms": 94.9,
         "error": null
       },
       {
         "test": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_top_pick_structure",
         "status": "PASSED",
-        "duration_ms": 83.1,
+        "duration_ms": 89.0,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_produces_all_category_keys",
         "status": "PASSED",
-        "duration_ms": 92.4,
+        "duration_ms": 76.4,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_stats_populated",
         "status": "PASSED",
-        "duration_ms": 91.9,
+        "duration_ms": 77.5,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_handles_orchestrator_failure",
         "status": "PASSED",
-        "duration_ms": 86.7,
+        "duration_ms": 73.6,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_progress_callback_called",
         "status": "PASSED",
-        "duration_ms": 103.1,
+        "duration_ms": 85.8,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_enriches_report_with_earnings_data",
         "status": "PASSED",
-        "duration_ms": 99.7,
+        "duration_ms": 90.2,
         "error": null
       },
       {
@@ -2191,7 +2221,7 @@
       {
         "test": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_non_numeric_raises",
         "status": "PASSED",
-        "duration_ms": 0.1,
+        "duration_ms": 0.2,
         "error": null
       },
       {
@@ -2275,7 +2305,7 @@
       {
         "test": "tests/test_validators.py::TestValidateQuantity::test_non_numeric_raises",
         "status": "PASSED",
-        "duration_ms": 0.2,
+        "duration_ms": 0.1,
         "error": null
       },
       {
@@ -2337,13 +2367,13 @@
       {
         "test": "tests/test_coverage_gaps.py::TestDataCollectorLastBranches::test_fetch_historical_prices_general_exception_returns_empty",
         "status": "PASSED",
-        "duration_ms": 44.8,
+        "duration_ms": 49.8,
         "error": null
       },
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_returns_list_on_success",
         "status": "PASSED",
-        "duration_ms": 1.3,
+        "duration_ms": 1.2,
         "error": null
       },
       {
@@ -2355,19 +2385,19 @@
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_stores_source_url",
         "status": "PASSED",
-        "duration_ms": 1.3,
+        "duration_ms": 1.2,
         "error": null
       },
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_financials_screener_returns_ticker",
         "status": "PASSED",
-        "duration_ms": 0.3,
+        "duration_ms": 0.4,
         "error": null
       },
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_historical_prices_no_yfinance_returns_empty",
         "status": "PASSED",
-        "duration_ms": 0.8,
+        "duration_ms": 0.9,
         "error": null
       },
       {
@@ -2383,15 +2413,105 @@
         "error": null
       },
       {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_current_ipos_normalizes_fields",
+        "status": "PASSED",
+        "duration_ms": 1.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_current_ipos_returns_empty_on_error",
+        "status": "PASSED",
+        "duration_ms": 0.8,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_current_ipos_handles_bare_list_response",
+        "status": "PASSED",
+        "duration_ms": 1.5,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_upcoming_ipos_marks_status_upcoming",
+        "status": "PASSED",
+        "duration_ms": 1.6,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_filters_by_lookback_window",
+        "status": "PASSED",
+        "duration_ms": 3.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_computes_days_since_listing",
+        "status": "PASSED",
+        "duration_ms": 1.9,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_uses_config_default_months",
+        "status": "PASSED",
+        "duration_ms": 1.7,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_keeps_records_with_unparseable_date",
+        "status": "PASSED",
+        "duration_ms": 2.3,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[01-Jan-2026-expected0]",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[2026-01-01-expected1]",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[01/01/2026-expected2]",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[garbage-None]",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[None-None]",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPODataAgent::test_close_does_not_raise",
+        "status": "PASSED",
+        "duration_ms": 0.2,
+        "error": null
+      },
+      {
+        "test": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_delegates_to_unicorn_hunter_and_merges_ipo_metadata",
+        "status": "PASSED",
+        "duration_ms": 0.8,
+        "error": null
+      },
+      {
         "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_with_mock_data",
         "status": "PASSED",
-        "duration_ms": 360.7,
+        "duration_ms": 409.5,
         "error": null
       },
       {
         "test": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_empty_dataframe",
         "status": "PASSED",
-        "duration_ms": 1.1,
+        "duration_ms": 1.2,
         "error": null
       },
       {
@@ -2419,19 +2539,19 @@
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_when_no_api_key",
         "status": "PASSED",
-        "duration_ms": 47.4,
+        "duration_ms": 49.5,
         "error": null
       },
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_articles_on_success",
         "status": "PASSED",
-        "duration_ms": 1.5,
+        "duration_ms": 1.9,
         "error": null
       },
       {
         "test": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_on_error",
         "status": "PASSED",
-        "duration_ms": 0.9,
+        "duration_ms": 0.6,
         "error": null
       }
     ]
@@ -2497,126 +2617,126 @@
       "test_id": "tests/test_api.py::test_health_returns_ok",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 4.7,
+      "duration_ms": 5.0,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_categories_returns_six_categories",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 3.9,
+      "duration_ms": 4.2,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_categories_has_disclaimer",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 3.5,
+      "duration_ms": 3.4,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_disclaimer_endpoint",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 3.2,
+      "duration_ms": 3.0,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_order_preview_returns_preview",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 5.7,
+      "duration_ms": 5.5,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_order_preview_shows_paper_trade_mode",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 4.0,
+      "duration_ms": 3.1,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_order_place_rejected_without_confirmation",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 2.9,
+      "duration_ms": 3.4,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_order_place_accepted_with_confirmation",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 3.7,
+      "duration_ms": 3.5,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_order_place_rejected_insufficient_funds",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 3.2,
+      "duration_ms": 3.1,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_order_side_validation",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 2.2,
+      "duration_ms": 2.1,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_paper_log_returns_list",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 2.9,
+      "duration_ms": 2.7,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_research_returns_200",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 1115.8,
+      "duration_ms": 1204.8,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_research_contains_disclaimer",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 5193.8,
+      "duration_ms": 1153.1,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_research_invalid_ticker_in_body_returns_400",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 91.7,
+      "duration_ms": 80.8,
       "error": null
     },
     {
       "test_id": "tests/test_api.py::test_research_scores_in_range",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 1231.0,
+      "duration_ms": 1176.2,
       "error": null
     },
     {
       "test_id": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_string",
       "category": "Audit & Prompt Versioning",
       "status": "PASSED",
-      "duration_ms": 2.3,
+      "duration_ms": 2.4,
       "error": null
     },
     {
       "test_id": "tests/test_audit_agent.py::TestGetGitCommitHash::test_returns_unknown_on_failure",
       "category": "Audit & Prompt Versioning",
       "status": "PASSED",
-      "duration_ms": 0.9,
+      "duration_ms": 0.7,
       "error": null
     },
     {
       "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_creates_prompt_file",
       "category": "Audit & Prompt Versioning",
       "status": "PASSED",
-      "duration_ms": 3.1,
+      "duration_ms": 3.4,
       "error": null
     },
     {
@@ -2630,14 +2750,14 @@
       "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_record_change_increments_version",
       "category": "Audit & Prompt Versioning",
       "status": "PASSED",
-      "duration_ms": 4.7,
+      "duration_ms": 4.6,
       "error": null
     },
     {
       "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_changelog_is_updated",
       "category": "Audit & Prompt Versioning",
       "status": "PASSED",
-      "duration_ms": 2.3,
+      "duration_ms": 2.6,
       "error": null
     },
     {
@@ -2651,14 +2771,14 @@
       "test_id": "tests/test_audit_agent.py::TestAuditAgent::test_backtest_result_included_when_provided",
       "category": "Audit & Prompt Versioning",
       "status": "PASSED",
-      "duration_ms": 2.4,
+      "duration_ms": 2.2,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestOrderRequest::test_valid_order_request",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -2714,70 +2834,70 @@
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_is_paper_trading_by_default",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 2.2,
+      "duration_ms": 0.9,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_order_rejected_without_confirmation",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.7,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_order_placed_with_confirmation",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.7,
+      "duration_ms": 1.0,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_insufficient_funds_rejected",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.7,
+      "duration_ms": 0.6,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_paper_trade_log_records_order",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.7,
+      "duration_ms": 0.6,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_multiple_orders_in_log",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.9,
+      "duration_ms": 1.0,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_preview_shows_paper_trade_mode",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.6,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_paper_trade_with_confirmation",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.4,
+      "duration_ms": 0.6,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_cancel_without_confirmation_rejected",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.6,
       "error": null
     },
     {
       "test_id": "tests/test_broker_agent.py::TestBrokerAgentPaperTrading::test_disclaimer_always_in_preview",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.4,
+      "duration_ms": 0.5,
       "error": null
     },
     {
@@ -2840,7 +2960,7 @@
       "test_id": "tests/test_broker_factory.py::TestBrokerFactory::test_unimplemented_holdings_raises_not_implemented",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.1,
       "error": null
     },
     {
@@ -2875,21 +2995,21 @@
       "test_id": "tests/test_config.py::TestLoadYamlConfig::test_default_only_when_env_file_missing",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.4,
+      "duration_ms": 0.7,
       "error": null
     },
     {
       "test_id": "tests/test_config.py::TestLoadYamlConfig::test_env_file_overrides_default",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.6,
+      "duration_ms": 0.7,
       "error": null
     },
     {
       "test_id": "tests/test_config.py::TestLoadYamlConfig::test_env_var_interpolation",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.6,
       "error": null
     },
     {
@@ -2952,14 +3072,14 @@
       "test_id": "tests/test_config.py::TestConfigPrecedence::test_active_broker_env_var_overrides_yaml",
       "category": "Broker & Order Execution",
       "status": "PASSED",
-      "duration_ms": 11.5,
+      "duration_ms": 13.1,
       "error": null
     },
     {
       "test_id": "tests/test_config.py::TestConfigPrecedence::test_paper_trading_env_var_parsed_as_bool",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 12.7,
+      "duration_ms": 12.0,
       "error": null
     },
     {
@@ -3225,7 +3345,7 @@
       "test_id": "tests/test_coverage_gaps.py::TestPortfolioAgentGaps::test_sector_weight_clamped_when_sector_nearly_full",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.3,
       "error": null
     },
     {
@@ -3288,7 +3408,7 @@
       "test_id": "tests/test_coverage_gaps.py::TestValidatorGaps::test_validate_ratio_non_numeric_raises",
       "category": "Input Validation",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -3379,7 +3499,7 @@
       "test_id": "tests/test_coverage_gaps.py::TestDataCollectorLastBranches::test_fetch_historical_prices_general_exception_returns_empty",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 44.8,
+      "duration_ms": 49.8,
       "error": null
     },
     {
@@ -3400,14 +3520,14 @@
       "test_id": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_research_500_on_unexpected_error",
       "category": "API Endpoints",
       "status": "PASSED",
-      "duration_ms": 7.4,
+      "duration_ms": 5.0,
       "error": null
     },
     {
       "test_id": "tests/test_coverage_gaps.py::TestAPIRoutesGaps::test_portfolio_suggest_endpoint",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 5.1,
+      "duration_ms": 4.9,
       "error": null
     },
     {
@@ -3421,7 +3541,7 @@
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_returns_list_on_success",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 1.3,
+      "duration_ms": 1.2,
       "error": null
     },
     {
@@ -3435,42 +3555,42 @@
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_nse_stock_list_stores_source_url",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 1.3,
+      "duration_ms": 1.2,
       "error": null
     },
     {
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_when_no_api_key",
       "category": "News & Sentiment",
       "status": "PASSED",
-      "duration_ms": 47.4,
+      "duration_ms": 49.5,
       "error": null
     },
     {
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_articles_on_success",
       "category": "News & Sentiment",
       "status": "PASSED",
-      "duration_ms": 1.5,
+      "duration_ms": 1.9,
       "error": null
     },
     {
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_news_returns_empty_on_error",
       "category": "News & Sentiment",
       "status": "PASSED",
-      "duration_ms": 0.9,
+      "duration_ms": 0.6,
       "error": null
     },
     {
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_financials_screener_returns_ticker",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.4,
       "error": null
     },
     {
       "test_id": "tests/test_data_collector.py::TestDataCollectorAgent::test_fetch_historical_prices_no_yfinance_returns_empty",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 0.8,
+      "duration_ms": 0.9,
       "error": null
     },
     {
@@ -3645,7 +3765,7 @@
       "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_statements",
       "category": "Fundamental Analysis",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.4,
       "error": null
     },
     {
@@ -3659,6 +3779,146 @@
       "test_id": "tests/test_fundamental_agent.py::TestFundamentalAgent::test_analyze_with_quarterly_only_returns_none_cagr",
       "category": "Fundamental Analysis",
       "status": "PASSED",
+      "duration_ms": 0.1,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_current_ipos_normalizes_fields",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_current_ipos_returns_empty_on_error",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_current_ipos_handles_bare_list_response",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_upcoming_ipos_marks_status_upcoming",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.6,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_filters_by_lookback_window",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 3.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_computes_days_since_listing",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.9,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_uses_config_default_months",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 1.7,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_fetch_recently_listed_ipos_keeps_records_with_unparseable_date",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 2.3,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[01-Jan-2026-expected0]",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[2026-01-01-expected1]",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[01/01/2026-expected2]",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[garbage-None]",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_parse_date_handles_multiple_formats[None-None]",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPODataAgent::test_close_does_not_raise",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.2,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_returns_empty_result_when_no_ipos_found",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.5,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_delegates_to_unicorn_hunter_and_merges_ipo_metadata",
+      "category": "Data Collection",
+      "status": "PASSED",
+      "duration_ms": 0.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_reranks_by_composite_after_recency_bonus",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_respects_top_n_truncation",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 1.0,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_hunt_uses_explicit_symbol_list_without_fetching_ipos",
+      "category": "General",
+      "status": "PASSED",
+      "duration_ms": 0.8,
+      "error": null
+    },
+    {
+      "test_id": "tests/test_ipo_agent.py::TestIPOUnicornHunterAgent::test_close_does_not_raise",
+      "category": "General",
+      "status": "PASSED",
       "duration_ms": 0.2,
       "error": null
     },
@@ -3666,28 +3926,28 @@
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_returns_all_dimensions",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.8,
+      "duration_ms": 1.3,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_fallback_score_is_5_for_all",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.9,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_in_range",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.6,
+      "duration_ms": 0.9,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_overall_moat_score_max_inputs_gives_near_10",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.9,
       "error": null
     },
     {
@@ -3701,56 +3961,56 @@
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_without_llm_uses_fallback",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.8,
+      "duration_ms": 1.0,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_success",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 46.8,
+      "duration_ms": 56.0,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_with_llm_fallback_on_error",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 45.1,
+      "duration_ms": 55.6,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestMoatAgent::test_analyze_returns_ticker",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.7,
+      "duration_ms": 1.0,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_empty_articles_returns_neutral",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.7,
+      "duration_ms": 0.9,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_positive_sentiment",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.6,
+      "duration_ms": 0.5,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_negative_sentiment",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.7,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_keyword_fallback_mixed_sentiment",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.4,
+      "duration_ms": 0.6,
       "error": null
     },
     {
@@ -3764,105 +4024,105 @@
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_success",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 45.9,
+      "duration_ms": 54.9,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_analyze_with_llm_fallback_on_error",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 45.6,
+      "duration_ms": 45.5,
       "error": null
     },
     {
       "test_id": "tests/test_moat_news_agents.py::TestNewsAgent::test_format_articles_caps_at_20",
       "category": "Moat & Business Quality",
       "status": "PASSED",
-      "duration_ms": 0.6,
+      "duration_ms": 3.0,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_research_returns_all_required_keys",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 1106.7,
+      "duration_ms": 1249.8,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_disclaimer_always_present",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 1102.7,
+      "duration_ms": 1113.2,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_final_rating_is_valid_value",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 1049.2,
+      "duration_ms": 1065.5,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_scores_are_in_range",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 977.9,
+      "duration_ms": 1013.8,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_invalid_ticker_raises",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 87.3,
+      "duration_ms": 91.8,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_high_growth",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 84.7,
+      "duration_ms": 90.3,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_growth_score_low_growth",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 85.6,
+      "duration_ms": 91.6,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_strong_candidate",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 85.6,
+      "duration_ms": 92.3,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_rule_based_synthesis_avoid_high_risk",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 99.0,
+      "duration_ms": 91.3,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_with_mock",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 339.1,
+      "duration_ms": 399.5,
       "error": null
     },
     {
       "test_id": "tests/test_orchestrator.py::TestOrchestrator::test_llm_synthesis_falls_back_on_error",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 321.7,
+      "duration_ms": 480.1,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestPhilipFisherAgent::test_analyze_with_llm",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 43.7,
+      "duration_ms": 64.6,
       "error": null
     },
     {
@@ -3876,7 +4136,7 @@
       "test_id": "tests/test_phase2_agents.py::TestPhilipFisherAgent::test_llm_failure_falls_back",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 42.4,
+      "duration_ms": 48.2,
       "error": null
     },
     {
@@ -3890,7 +4150,7 @@
       "test_id": "tests/test_phase2_agents.py::TestPhilipFisherAgent::test_llm_json_parse_error_falls_back",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 43.1,
+      "duration_ms": 47.5,
       "error": null
     },
     {
@@ -3904,91 +4164,91 @@
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_analyze_with_llm_no_rss",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 84.5,
+      "duration_ms": 107.3,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_analyze_fallback_no_llm",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.6,
+      "duration_ms": 45.4,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_rule_based_bullish",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.2,
+      "duration_ms": 43.6,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_rule_based_bearish",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.5,
+      "duration_ms": 43.8,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_rule_based_hype_detection",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.4,
+      "duration_ms": 44.0,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_rss_fetch_network_error_handled",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.0,
+      "duration_ms": 42.8,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_rss_fetch_filters_by_ticker",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 45.3,
+      "duration_ms": 47.5,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_rss_non_200_skipped",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 41.2,
+      "duration_ms": 44.1,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_analyze_with_extra_articles",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.5,
+      "duration_ms": 44.2,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_llm_failure_falls_back",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 79.6,
+      "duration_ms": 87.4,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestSentimentAgent::test_close",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 40.2,
+      "duration_ms": 43.2,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_analyze_small_cap_with_llm",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 42.9,
+      "duration_ms": 45.4,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_analyze_large_cap_fallback",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.4,
+      "duration_ms": 0.3,
       "error": null
     },
     {
@@ -4037,14 +4297,14 @@
       "test_id": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_llm_failure_falls_back",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 42.1,
+      "duration_ms": 46.8,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestUnicornDetectorAgent::test_mid_cap_label",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.4,
       "error": null
     },
     {
@@ -4114,7 +4374,7 @@
       "test_id": "tests/test_phase2_agents.py::TestScoringFunctions::test_pick_top_returns_n",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4135,42 +4395,42 @@
       "test_id": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_run_single_stock",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 121.2,
+      "duration_ms": 140.1,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_run_failed_stock_included_as_error",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 76.7,
+      "duration_ms": 88.7,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_run_multiple_stocks",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 82.5,
+      "duration_ms": 88.2,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_report_structure",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 84.2,
+      "duration_ms": 94.9,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_top_pick_structure",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 83.1,
+      "duration_ms": 89.0,
       "error": null
     },
     {
       "test_id": "tests/test_phase2_agents.py::TestDailyReportOrchestrator::test_avoid_list_excludes_strong_candidates_with_low_risk",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 80.9,
+      "duration_ms": 89.0,
       "error": null
     },
     {
@@ -4212,35 +4472,35 @@
       "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_suggest_allocation_returns_allocations",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.3,
       "error": null
     },
     {
       "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_pct_not_exceed_single_stock_limit",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_total_not_exceed_100",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_same_sector_concentration_limited",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_disclaimer_always_present",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4268,28 +4528,28 @@
       "test_id": "tests/test_portfolio_agent.py::TestPortfolioAgent::test_allocation_amount_matches_pct",
       "category": "Portfolio Construction",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_high_debt_flag_detected",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_negative_fcf_flag_detected",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_high_promoter_pledge_flag",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4303,7 +4563,7 @@
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_overvalued_pe_flag",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4317,14 +4577,14 @@
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_governance_issue_flag",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_sudden_price_spike_flag",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4380,7 +4640,7 @@
       "test_id": "tests/test_risk_agent.py::TestRiskAgent::test_analyze_returns_all_keys",
       "category": "Risk Detection",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.3,
       "error": null
     },
     {
@@ -4464,7 +4724,7 @@
       "test_id": "tests/test_unicorn_hunter.py::test_parse_info_basic",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.1,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4562,56 +4822,56 @@
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_returns_expected_keys",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.6,
+      "duration_ms": 1.9,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_all_filtered_out",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.3,
+      "duration_ms": 1.4,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_fetch_failure_counted",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.9,
+      "duration_ms": 1.0,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_top_n_respected",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 3.0,
+      "duration_ms": 3.8,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_sorted_by_composite",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.6,
+      "duration_ms": 1.5,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_theme_breakdown_structure",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.3,
+      "duration_ms": 1.0,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_progress_callback_called",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.5,
+      "duration_ms": 1.4,
       "error": null
     },
     {
       "test_id": "tests/test_unicorn_hunter.py::test_hunt_uses_unicorn_universe_by_default",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 7.9,
+      "duration_ms": 7.8,
       "error": null
     },
     {
@@ -4625,7 +4885,7 @@
       "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_parse_info_converts_units_correctly",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.2,
       "error": null
     },
     {
@@ -4688,28 +4948,28 @@
       "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_with_mocked_fetch",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.9,
+      "duration_ms": 1.7,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_all_fetch_failures",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.7,
+      "duration_ms": 1.2,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_screen_progress_callback",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 1.3,
+      "duration_ms": 1.1,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScreenerAgent::test_get_symbol_list_fallback",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 44.2,
+      "duration_ms": 35.6,
       "error": null
     },
     {
@@ -4737,21 +4997,21 @@
       "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_with_mock_data",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 360.7,
+      "duration_ms": 409.5,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_returns_error_on_fetch_failure",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.5,
+      "duration_ms": 0.4,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestQuarterlyEarningsAgent::test_analyze_empty_dataframe",
       "category": "Data Collection",
       "status": "PASSED",
-      "duration_ms": 1.1,
+      "duration_ms": 1.2,
       "error": null
     },
     {
@@ -4800,35 +5060,35 @@
       "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_produces_all_category_keys",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 92.4,
+      "duration_ms": 76.4,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_stats_populated",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 91.9,
+      "duration_ms": 77.5,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_handles_orchestrator_failure",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 86.7,
+      "duration_ms": 73.6,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_progress_callback_called",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 103.1,
+      "duration_ms": 85.8,
       "error": null
     },
     {
       "test_id": "tests/test_universe_scan.py::TestUniverseScanOrchestrator::test_run_enriches_report_with_earnings_data",
       "category": "Research Orchestration",
       "status": "PASSED",
-      "duration_ms": 99.7,
+      "duration_ms": 90.2,
       "error": null
     },
     {
@@ -4891,7 +5151,7 @@
       "test_id": "tests/test_universe_scan.py::TestJobStore::test_update_progress",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.1,
       "error": null
     },
     {
@@ -4919,7 +5179,7 @@
       "test_id": "tests/test_universe_scan.py::TestJobStore::test_thread_safety",
       "category": "General",
       "status": "PASSED",
-      "duration_ms": 5.0,
+      "duration_ms": 4.7,
       "error": null
     },
     {
@@ -4996,7 +5256,7 @@
       "test_id": "tests/test_validators.py::TestValidateQuantity::test_non_numeric_raises",
       "category": "Input Validation",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.1,
       "error": null
     },
     {
@@ -5101,7 +5361,7 @@
       "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_ev_ebitda_normal",
       "category": "Valuation & DCF",
       "status": "PASSED",
-      "duration_ms": 0.2,
+      "duration_ms": 0.1,
       "error": null
     },
     {
@@ -5199,7 +5459,7 @@
       "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_positive_fcf",
       "category": "Valuation & DCF",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.4,
       "error": null
     },
     {
@@ -5220,7 +5480,7 @@
       "test_id": "tests/test_valuation_agent.py::TestValuationAgent::test_dcf_custom_margin_of_safety",
       "category": "Valuation & DCF",
       "status": "PASSED",
-      "duration_ms": 0.3,
+      "duration_ms": 0.2,
       "error": null
     },
     {
