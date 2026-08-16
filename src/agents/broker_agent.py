@@ -3,16 +3,13 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from src.agents.registry import AgentRegistry
+from src.utils import config as config_module
 from src.utils.config import get_config
 from src.utils.logger import get_logger
 from src.utils.validators import validate_price, validate_quantity, validate_ticker
 
 logger = get_logger(__name__)
-
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
 
 
 class OrderRequest:
@@ -67,6 +64,7 @@ class PaperTradingLog:
         return list(self._orders)
 
 
+@AgentRegistry.register("broker")
 class BrokerAgent:
     """
     Manages all order execution.
@@ -80,6 +78,11 @@ class BrokerAgent:
 
     def __init__(self, config=None):
         self.cfg = config or get_config()
+        # Disclaimer text always comes from the real loaded config, independent of
+        # whatever `config` object the caller injects — or, in tests, of `get_config`
+        # itself being patched at module scope (see fundamental_agent.py and
+        # tests/test_broker_agent.py's `_make_agent`).
+        self.disclaimer = config_module.get_config().disclaimer
         self.paper_log = PaperTradingLog()
         self._broker_client = None  # loaded lazily
 
@@ -102,7 +105,7 @@ class BrokerAgent:
             if not self.is_paper_trading
             else "This is a simulated paper trade. No real money involved."
         )
-        preview["disclaimer"] = DISCLAIMER
+        preview["disclaimer"] = self.disclaimer
         return preview
 
     def place_order(
@@ -124,7 +127,7 @@ class BrokerAgent:
                 "status": "REJECTED",
                 "reason": "User confirmation is required before placing any order.",
                 "preview": self.preview_order(order_request),
-                "disclaimer": DISCLAIMER,
+                "disclaimer": self.disclaimer,
             }
 
         # Funds check
@@ -134,7 +137,7 @@ class BrokerAgent:
                 return {
                     "status": "REJECTED",
                     "reason": f"Insufficient funds. Required: ₹{required:,.2f}, Available: ₹{available_funds:,.2f}",
-                    "disclaimer": DISCLAIMER,
+                    "disclaimer": self.disclaimer,
                 }
 
         if self.is_paper_trading:
@@ -144,18 +147,28 @@ class BrokerAgent:
         return self._place_live_order(order_request)  # pragma: no cover
 
     def _place_live_order(self, order_request: OrderRequest) -> Dict[str, Any]:  # pragma: no cover
-        """Dispatches to the configured broker connector. Requires live broker credentials."""
-        broker_key = self.cfg.broker.zerodha_api_key
-        if not broker_key:
-            return {
-                "status": "REJECTED",
-                "reason": "No broker API key configured. Set ZERODHA_API_KEY (or equivalent) in .env.",
-            }
+        """Dispatches to the broker connector configured via config.broker.active_broker
+        (config/default.yaml, overridable with the ACTIVE_BROKER env var). Requires
+        live broker credentials for that broker."""
+        # Registers all connectors with BrokerFactory as a side effect of import.
+        import src.brokers.zerodha  # noqa: F401
+        import src.brokers.upstox  # noqa: F401
+        import src.brokers.angelone  # noqa: F401
+        import src.brokers.dhan  # noqa: F401
+        from src.brokers.factory import BrokerFactory
+
+        active_broker = self.cfg.broker.active_broker
         try:
-            from src.brokers.zerodha import ZerodhaConnector
-            connector = ZerodhaConnector(self.cfg.broker)
+            connector = BrokerFactory.create(active_broker, self.cfg.broker)
+        except ValueError as exc:
+            return {"status": "REJECTED", "reason": str(exc)}
+
+        try:
             result = connector.place_order(order_request)
-            logger.info("LIVE ORDER placed | id=%s | status=%s", result.get("order_id"), result.get("status"))
+            logger.info(
+                "LIVE ORDER placed via %s | id=%s | status=%s",
+                active_broker, result.get("order_id"), result.get("status"),
+            )
             return result
         except Exception as exc:
             logger.error("Live order failed for %s: %s", order_request.ticker, exc)
@@ -167,8 +180,12 @@ class BrokerAgent:
         if self.is_paper_trading:
             return {"status": "CANCELLED", "order_id": order_id, "mode": "PAPER TRADE"}
         try:  # pragma: no cover
-            from src.brokers.zerodha import ZerodhaConnector  # pragma: no cover
-            connector = ZerodhaConnector(self.cfg.broker)  # pragma: no cover
+            import src.brokers.zerodha  # noqa: F401  # pragma: no cover
+            import src.brokers.upstox  # noqa: F401  # pragma: no cover
+            import src.brokers.angelone  # noqa: F401  # pragma: no cover
+            import src.brokers.dhan  # noqa: F401  # pragma: no cover
+            from src.brokers.factory import BrokerFactory  # pragma: no cover
+            connector = BrokerFactory.create(self.cfg.broker.active_broker, self.cfg.broker)  # pragma: no cover
             return connector.cancel_order(order_id)  # pragma: no cover
         except Exception as exc:  # pragma: no cover
             return {"status": "ERROR", "reason": str(exc)}  # pragma: no cover

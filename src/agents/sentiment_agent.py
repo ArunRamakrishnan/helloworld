@@ -6,33 +6,12 @@ from xml.etree import ElementTree
 import httpx
 import anthropic
 
+from src.agents.registry import AgentRegistry
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.prompts import load_prompt
 
 logger = get_logger(__name__)
-
-SENTIMENT_SYSTEM_PROMPT = """You are a market sentiment analyst for Indian equities.
-You will receive news headlines and summaries from financial portals.
-
-Your job:
-1. Detect overall market sentiment: Bullish | Bearish | Neutral | Mixed
-2. Identify if there is excessive hype (pump risk) or panic (fear-driven selling)
-3. Detect accumulation signals (consistent buying interest, institutional coverage)
-4. Flag momentum signals (trending topics, analyst upgrades/downgrades)
-5. Rate retail sentiment (social buzz level): Low | Medium | High
-
-Respond ONLY as valid JSON with keys:
-- overall_sentiment: "Bullish" | "Bearish" | "Neutral" | "Mixed"
-- hype_detected: true | false
-- fear_detected: true | false
-- accumulation_signal: true | false
-- retail_buzz_level: "Low" | "Medium" | "High"
-- analyst_bias: "Positive" | "Negative" | "Neutral"
-- sentiment_score: float 0-10 (10 = extremely bullish)
-- key_signals: list of 2-4 most important signals found
-- contrarian_note: one sentence on what the crowd may be missing
-
-This is educational research. Not financial advice."""
 
 # Public RSS feeds that don't require auth
 RSS_SOURCES = {
@@ -42,6 +21,7 @@ RSS_SOURCES = {
 }
 
 
+@AgentRegistry.register("sentiment")
 class SentimentAgent:
     """
     Aggregates sentiment from:
@@ -50,7 +30,14 @@ class SentimentAgent:
     3. LLM analysis of all signals
 
     Falls back to rule-based scoring if LLM unavailable.
+    The system prompt lives in prompts/system/sentiment.md.
     """
+
+    output_key = "sentiment"
+
+    @staticmethod
+    def pipeline_kwargs(ticker: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {"extra_articles": context.get("articles", [])}
 
     def __init__(self, config=None):
         self.cfg = config or get_config()
@@ -98,8 +85,8 @@ class SentimentAgent:
         try:
             msg = self._client.messages.create(
                 model=self.cfg.llm.model,
-                max_tokens=1024,
-                system=SENTIMENT_SYSTEM_PROMPT,
+                max_tokens=self.cfg.llm.max_tokens_for("sentiment"),
+                system=load_prompt("sentiment"),
                 messages=[{"role": "user", "content": user_msg}],
             )
             data = json.loads(msg.content[0].text.strip())

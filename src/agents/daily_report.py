@@ -9,11 +9,6 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
-
 # Default categories in the morning report
 REPORT_CATEGORIES = [
     "top_buffett_stocks",       # High ROE, moat, low debt
@@ -133,6 +128,9 @@ class DailyReportOrchestrator:
     def __init__(self, config=None):
         self.cfg = config or get_config()
         self.orchestrator = Orchestrator(config=self.cfg)
+        # Disclaimer text always comes from the real loaded config (see
+        # fundamental_agent.py).
+        self.disclaimer = get_config().disclaimer
 
     def run(self, watchlist: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
@@ -196,5 +194,5 @@ class DailyReportOrchestrator:
                 "Top Buffett and Fisher picks represent highest quality; "
                 "small cap opportunities carry higher risk."
             ),
-            "disclaimer": DISCLAIMER,
+            "disclaimer": self.disclaimer,
         }

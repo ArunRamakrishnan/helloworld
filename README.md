@@ -16,15 +16,22 @@ A safe, explainable AI-powered investment research platform for NSE/BSE Indian e
 
 ```
 investment-agent/
-├── src/agents/          # 9 specialized AI agents
-├── src/api/             # FastAPI backend
-├── src/brokers/         # Zerodha, Upstox, DhanHQ, Angel One connectors
-├── src/data/            # PostgreSQL models and repository layer
-├── src/utils/           # Logging, config, validators
-├── tests/               # 100% business use case coverage
-├── prompts/             # All prompts versioned with date
-└── docs/                # Architecture, compliance, changelog
+├── config/               # Business rules: scoring, pipeline, broker, disclaimer (YAML)
+├── src/agents/           # Specialized AI agents + AgentRegistry (Strategy/Factory)
+├── src/api/              # FastAPI backend
+├── src/brokers/          # Zerodha, Upstox, DhanHQ, Angel One connectors + BrokerFactory
+├── src/data/             # PostgreSQL models and repository layer
+├── src/utils/            # Logging, config loader, scoring helper, prompt loader, validators
+├── tests/                # 100% business use case coverage
+├── prompts/              # All prompts versioned as files (master + per-agent system prompts)
+└── docs/                 # Architecture, configuration, compliance, changelog
 ```
+
+The pipeline is config-driven: scoring thresholds/weights, which enrichment agents
+run, and broker selection are all read from `config/default.yaml` (+ env overrides)
+rather than hardcoded, so retuning behavior or adding a new agent/broker doesn't
+require editing the orchestrator. See **[docs/configuration.md](docs/configuration.md)**
+for the full guide.
 
 ## Agent Modules
 

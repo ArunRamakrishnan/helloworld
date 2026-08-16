@@ -6,45 +6,34 @@ import anthropic
 from src.agents.data_collector import DataCollectorAgent
 from src.agents.fundamental_agent import FundamentalAgent
 from src.agents.valuation_agent import ValuationAgent
-from src.agents.moat_agent import MoatAgent
+from src.agents.registry import AgentRegistry
 from src.agents.risk_agent import RiskAgent
-from src.agents.news_agent import NewsAgent
-from src.agents.fisher_agent import PhilipFisherAgent
-from src.agents.sentiment_agent import SentimentAgent
-from src.agents.unicorn_detector import UnicornDetectorAgent
+# Importing these registers them with AgentRegistry (see src/agents/registry.py).
+import src.agents.moat_agent  # noqa: F401
+import src.agents.news_agent  # noqa: F401
+import src.agents.fisher_agent  # noqa: F401
+import src.agents.sentiment_agent  # noqa: F401
+import src.agents.unicorn_detector  # noqa: F401
 from src.data.models import FinalRating, StockCategory
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.prompts import load_prompt
+from src.utils.scoring import tiered_score
 from src.utils.validators import validate_ticker
 
 logger = get_logger(__name__)
-
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
-
-SYNTHESIS_SYSTEM_PROMPT = """You are the Indian Investment Research Wizard.
-Given structured analysis data for a stock, produce a final research synthesis.
-Respond as JSON with these keys:
-- business_summary: 3-5 sentences on what the company does and how it makes money
-- bull_case: 2-3 bullet points (strongest positives)
-- bear_case: 2-3 bullet points (key risks and negatives)
-- ideal_investor_type: who should consider this stock (e.g., "Long-term value investor with 5+ year horizon")
-- final_rating: one of "Strong Research Candidate" | "Watch" | "Avoid"
-- confidence_pct: 0-100 reflecting certainty of the rating
-- category: one of "long_term_compounder" | "undervalued_value" | "turnaround" | "dividend_income" | "momentum_risky" | "avoid_watchlist"
-
-Rules:
-- A stock is "Strong Research Candidate" ONLY if business quality, financials, valuation, and governance are ALL acceptable.
-- Never use the word "guaranteed" or promise returns.
-- Always note the most important risk.
-Disclaimer: This is educational research, not financial advice."""
 
 
 class Orchestrator:
     """
     Runs all agents in sequence for a given ticker and synthesises a research report.
+
+    The mandatory chain (data -> fundamental -> valuation -> risk -> synthesis) has
+    real, non-uniform data dependencies and is explicit code below. The independent
+    "enrichment" agents (moat, news, sentiment, fisher, unicorn by default) are
+    config-driven: config.pipeline.enabled_agents (config/default.yaml) lists which
+    ones run, in what order, looked up via AgentRegistry — see src/agents/registry.py
+    for how to add a new one without editing this file.
     """
 
     def __init__(self, config=None):
@@ -52,12 +41,15 @@ class Orchestrator:
         self.data_agent = DataCollectorAgent(config=self.cfg)
         self.fundamental_agent = FundamentalAgent()
         self.valuation_agent = ValuationAgent()
-        self.moat_agent = MoatAgent(config=self.cfg)
         self.risk_agent = RiskAgent()
-        self.news_agent = NewsAgent(config=self.cfg)
-        self.fisher_agent = PhilipFisherAgent(config=self.cfg)
-        self.sentiment_agent = SentimentAgent(config=self.cfg)
-        self.unicorn_agent = UnicornDetectorAgent(config=self.cfg)
+        self.rules = get_config().scoring.synthesis
+        # Enrichment agent instances, keyed by name, built from the registry per the
+        # config-declared pipeline order — NOT from self.cfg, so a mocked/partial
+        # config object passed by a caller can't silently disable the pipeline.
+        self.enrichment_agents = {
+            name: AgentRegistry.create(name, self.cfg)
+            for name in get_config().pipeline.enabled_agents
+        }
         self._llm: Optional[anthropic.Anthropic] = None
         if self.cfg.llm.anthropic_api_key:
             self._llm = anthropic.Anthropic(api_key=self.cfg.llm.anthropic_api_key)
@@ -97,33 +89,28 @@ class Orchestrator:
             profit_cagr, dividend_per_share,
         )
 
-        # 3. Moat
-        moat = self.moat_agent.analyze(validated, business_description)
-
-        # 4. News + Sentiment
+        # 3. Enrichment agents (moat, news, sentiment, fisher, unicorn by default) —
+        # config-driven; see self.enrichment_agents / config.pipeline.enabled_agents.
         articles = self.data_agent.fetch_news(validated)
-        news = self.news_agent.analyze(validated, articles)
-        sentiment = self.sentiment_agent.analyze(validated, extra_articles=articles)
+        context: Dict[str, Any] = {
+            "business_description": business_description,
+            "market_cap_cr": market_cap_cr,
+            "articles": articles,
+            **fundamental,
+            **valuation,
+        }
+        for name, agent in self.enrichment_agents.items():
+            agent_cls = type(agent)
+            kwargs = agent_cls.pipeline_kwargs(validated, context)
+            context[name] = agent.analyze(validated, **kwargs)
 
-        # 5. Philip Fisher analysis
-        fisher = self.fisher_agent.analyze(
-            validated, business_description,
-            revenue_cagr=fundamental.get("revenue_cagr_3y"),
-            profit_cagr=fundamental.get("profit_cagr_3y"),
-            roe=fundamental.get("roe"),
-        )
+        moat = context.get("moat", {})
+        news = context.get("news", {})
+        sentiment = context.get("sentiment", {})
+        fisher = context.get("fisher", {})
+        unicorn = context.get("unicorn", {})
 
-        # 6. Unicorn detection
-        unicorn = self.unicorn_agent.analyze(
-            validated, business_description, market_cap_cr,
-            revenue_cagr=fundamental.get("revenue_cagr_3y"),
-            profit_cagr=fundamental.get("profit_cagr_3y"),
-            roe=fundamental.get("roe"),
-            debt_equity=fundamental.get("debt_equity"),
-            promoter_holding_pct=fundamental.get("promoter_holding_pct"),
-        )
-
-        # 7. Risk (combines all signals)
+        # 4. Risk (combines all signals)
         risk_data = {
             **fundamental,
             **valuation,
@@ -131,7 +118,7 @@ class Orchestrator:
         }
         risk = self.risk_agent.analyze(validated, risk_data)
 
-        # 8. LLM synthesis
+        # 5. LLM synthesis
         synthesis = self._synthesize(validated, fundamental, valuation, moat, risk, news, fisher, unicorn)
 
         report = {
@@ -185,7 +172,7 @@ class Orchestrator:
             "retail_buzz_level": sentiment.get("retail_buzz_level"),
             # Synthesis
             **synthesis,
-            "disclaimer": DISCLAIMER,
+            "disclaimer": get_config().disclaimer,
         }
         logger.info(
             "Research complete for %s | rating=%s | confidence=%.0f%%",
@@ -197,15 +184,7 @@ class Orchestrator:
         rev_cagr = fundamental.get("revenue_cagr_3y") or 0
         profit_cagr = fundamental.get("profit_cagr_3y") or 0
         avg = (rev_cagr + profit_cagr) / 2
-        if avg >= 0.20:
-            return 10.0
-        if avg >= 0.15:
-            return 8.0
-        if avg >= 0.10:
-            return 6.0
-        if avg >= 0.05:
-            return 4.0
-        return 2.0
+        return tiered_score(avg, self.rules.growth_tiers, no_match=self.rules.growth_no_match)
 
     def _synthesize(
         self,
@@ -249,8 +228,8 @@ class Orchestrator:
         try:
             msg = self._llm.messages.create(
                 model=self.cfg.llm.model,
-                max_tokens=2048,
-                system=SYNTHESIS_SYSTEM_PROMPT,
+                max_tokens=self.cfg.llm.max_tokens_for("synthesis"),
+                system=load_prompt("synthesis"),
                 messages=[{"role": "user", "content": user_msg}],
             )
             return json.loads(msg.content[0].text.strip())
@@ -268,26 +247,30 @@ class Orchestrator:
         rs = risk.get("risk_score", 5)
         fisher_score = (fisher or {}).get("fisher_score", 5)
         unicorn_score = (unicorn or {}).get("unicorn_score", 5)
+        r = self.rules
 
-        if rs >= 7:
+        if rs >= r.avoid_risk_threshold:
             rating = "Avoid"
-            confidence = 80.0
+            confidence = r.avoid_confidence
             category = "avoid_watchlist"
-        elif unicorn_score >= 7.5 and rs <= 4:
+        elif unicorn_score >= r.strong_unicorn_score_threshold and rs <= r.strong_unicorn_risk_max:
             rating = "Strong Research Candidate"
-            confidence = 78.0
+            confidence = r.strong_unicorn_confidence
             category = "long_term_compounder"
-        elif fs >= 7 and vs >= 6 and ms >= 6 and rs <= 3:
+        elif (
+            fs >= r.strong_core_financial_min and vs >= r.strong_core_valuation_min
+            and ms >= r.strong_core_moat_min and rs <= r.strong_core_risk_max
+        ):
             rating = "Strong Research Candidate"
-            confidence = 75.0
+            confidence = r.strong_core_confidence
             category = "long_term_compounder"
-        elif fisher_score >= 7 and unicorn_score >= 6:
+        elif fisher_score >= r.strong_fisher_score_min and unicorn_score >= r.strong_fisher_unicorn_min:
             rating = "Strong Research Candidate"
-            confidence = 70.0
+            confidence = r.strong_fisher_confidence
             category = "momentum_risky"
         else:
             rating = "Watch"
-            confidence = 55.0
+            confidence = r.watch_confidence
             category = "undervalued_value"
 
         bull = ["Strong financials", "Good moat score"] if fs >= 7 else []

@@ -3,30 +3,26 @@ from typing import Any, Dict, List, Optional
 
 import anthropic
 
+from src.agents.registry import AgentRegistry
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.prompts import load_prompt
 
 logger = get_logger(__name__)
 
-NEWS_SYSTEM_PROMPT = """You are a financial news analyst for Indian equities.
-Given a list of news articles about a stock, you must:
-1. Summarise verified facts (earnings, filings, management changes, regulatory actions).
-2. Identify sentiment: Positive / Neutral / Negative.
-3. Flag any hype or unverified social-media speculation and label it "unverified".
-4. Warn if articles discuss pump-and-dump patterns or suspicious activity.
 
-Respond as JSON with keys:
-- summary: 3-5 sentence factual summary
-- sentiment: "Positive" | "Neutral" | "Negative" | "Mixed"
-- key_facts: list of strings (verified facts only)
-- unverified_claims: list of strings (hype/speculation to ignore)
-- warnings: list of strings (governance, regulatory, suspicious patterns)
-
-This is educational research. Not financial advice."""
-
-
+@AgentRegistry.register("news")
 class NewsAgent:
-    """Summarises news using Claude LLM. Falls back to keyword-based analysis."""
+    """
+    Summarises news using Claude LLM. Falls back to keyword-based analysis.
+    The system prompt lives in prompts/system/news.md.
+    """
+
+    output_key = "news"
+
+    @staticmethod
+    def pipeline_kwargs(ticker: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {"articles": context.get("articles", [])}
 
     def __init__(self, config=None):
         self.cfg = config or get_config()
@@ -52,8 +48,8 @@ class NewsAgent:
         try:
             msg = self._client.messages.create(
                 model=self.cfg.llm.model,
-                max_tokens=1024,
-                system=NEWS_SYSTEM_PROMPT,
+                max_tokens=self.cfg.llm.max_tokens_for("news"),
+                system=load_prompt("news"),
                 messages=[{"role": "user", "content": user_msg}],
             )
             import json

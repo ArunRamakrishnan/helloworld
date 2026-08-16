@@ -4,46 +4,24 @@ from typing import Any, Dict, Optional
 
 import anthropic
 
+from src.agents.registry import AgentRegistry
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.prompts import load_prompt
+from src.utils.scoring import weighted_average
 from src.utils.validators import validate_score
 
 logger = get_logger(__name__)
 
-FISHER_SYSTEM_PROMPT = """You are a Philip Fisher-style investment analyst.
-Fisher's philosophy: invest in companies with outstanding growth prospects, visionary management,
-strong R&D, and the potential to dominate their market for decades.
 
-Evaluate the following Fisher dimensions on a 0-10 scale:
-- rd_innovation: R&D investment and new product pipeline quality
-- sales_organisation: strength and effectiveness of the sales/distribution organisation
-- profit_margins: industry-leading and improving profit margins
-- management_integrity: does management communicate honestly? Are promises kept?
-- management_vision: does leadership have a long-term vision and execution track record?
-- employee_relations: does the company attract and retain top talent?
-- future_monopoly: potential to become a dominant player or near-monopoly in its sector
-
-Key Fisher questions to answer:
-- Can this become a future monopoly in its niche?
-- Is management visionary and do they communicate clearly?
-- Are new products or services driving future growth?
-- Does the company have a growing addressable market?
-
-Respond ONLY as valid JSON with keys matching the dimension names above (each a float 0-10).
-Add:
-- "fisher_summary": 3-4 sentences on the company's Fisher profile
-- "scuttlebutt_signals": list of 2-3 positive signals a Fisher analyst would look for
-- "growth_ceiling": "high" | "medium" | "low" — how large can this company get?
-- "ten_x_potential": true | false — does this have 10x return potential over 10 years?
-
-This is educational research. Not financial advice."""
-
-
+@AgentRegistry.register("fisher")
 class PhilipFisherAgent:
     """
     Evaluates stocks through Philip Fisher's lens:
     R&D, innovation, management quality, future monopoly potential.
     Falls back to rule-based scoring if LLM is unavailable.
+    Dimension weights come from config.scoring.fisher; the system prompt lives in
+    prompts/system/fisher.md.
     """
 
     DIMENSIONS = [
@@ -56,18 +34,22 @@ class PhilipFisherAgent:
         "future_monopoly",
     ]
 
-    WEIGHTS = {
-        "rd_innovation": 0.20,
-        "sales_organisation": 0.10,
-        "profit_margins": 0.15,
-        "management_integrity": 0.15,
-        "management_vision": 0.20,
-        "employee_relations": 0.05,
-        "future_monopoly": 0.15,
-    }
+    output_key = "fisher"
+
+    @staticmethod
+    def pipeline_kwargs(ticker: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "business_description": context.get("business_description", ""),
+            "revenue_cagr": context.get("revenue_cagr_3y"),
+            "profit_cagr": context.get("profit_cagr_3y"),
+            "roe": context.get("roe"),
+        }
 
     def __init__(self, config=None):
         self.cfg = config or get_config()
+        # Scoring weights always come from the real loaded config, independent of
+        # whatever `config` object the caller injects (see fundamental_agent.py).
+        self.rules = get_config().scoring.fisher
         self._client: Optional[anthropic.Anthropic] = None
         if self.cfg.llm.anthropic_api_key:
             self._client = anthropic.Anthropic(api_key=self.cfg.llm.anthropic_api_key)
@@ -86,8 +68,8 @@ class PhilipFisherAgent:
         try:
             message = self._client.messages.create(
                 model=self.cfg.llm.model,
-                max_tokens=1024,
-                system=FISHER_SYSTEM_PROMPT,
+                max_tokens=self.cfg.llm.max_tokens_for("fisher"),
+                system=load_prompt("fisher"),
                 messages=[{"role": "user", "content": user_msg}],
             )
             data = json.loads(message.content[0].text.strip())
@@ -98,8 +80,9 @@ class PhilipFisherAgent:
             return self._fallback_score(ticker)
 
     def _fallback_score(self, ticker: str) -> Dict[str, Any]:
+        fallback = self.rules.fallback_score
         return {
-            **{dim: 5.0 for dim in self.DIMENSIONS},
+            **{dim: fallback for dim in self.DIMENSIONS},
             "fisher_summary": "Philip Fisher analysis unavailable — LLM not configured.",
             "scuttlebutt_signals": [],
             "growth_ceiling": "medium",
@@ -107,7 +90,8 @@ class PhilipFisherAgent:
         }
 
     def overall_fisher_score(self, scores: Dict[str, float]) -> float:
-        total = sum(scores.get(dim, 5.0) * w for dim, w in self.WEIGHTS.items())
+        fallback = self.rules.fallback_score
+        total = weighted_average([(scores.get(dim, fallback), w) for dim, w in self.rules.weights.items()])
         return round(validate_score(total, "fisher_score"), 2)
 
     def analyze(

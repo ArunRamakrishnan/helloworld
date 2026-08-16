@@ -1,12 +1,15 @@
 """Angel One SmartAPI broker integration."""
 from typing import Any, Dict
 
+from src.brokers.base import BrokerConnector
+from src.brokers.factory import BrokerFactory
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-class AngelOneConnector:
+@BrokerFactory.register("angelone")
+class AngelOneConnector(BrokerConnector):
     """
     Wraps the Angel One SmartAPI Python library.
     Requires: pip install smartapi-python
@@ -14,6 +17,7 @@ class AngelOneConnector:
     """
 
     def __init__(self, broker_config):
+        super().__init__(broker_config)
         self.api_key = broker_config.angel_api_key
         self.client_id = broker_config.angel_client_id
         self._smart_api = None

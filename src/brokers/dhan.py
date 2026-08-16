@@ -1,12 +1,15 @@
 """DhanHQ API broker integration."""
 from typing import Any, Dict
 
+from src.brokers.base import BrokerConnector
+from src.brokers.factory import BrokerFactory
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-class DhanConnector:
+@BrokerFactory.register("dhan")
+class DhanConnector(BrokerConnector):
     """
     Wraps the DhanHQ Python SDK.
     Requires: pip install dhanhq
@@ -14,6 +17,7 @@ class DhanConnector:
     """
 
     def __init__(self, broker_config):
+        super().__init__(broker_config)
         self.client_id = broker_config.dhan_client_id
         self.access_token = broker_config.dhan_access_token
 

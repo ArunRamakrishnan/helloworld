@@ -4,18 +4,15 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
+from src.agents.registry import AgentRegistry
 from src.utils.config import get_config
 from src.utils.logger import get_logger
 from src.utils.validators import validate_ticker
 
 logger = get_logger(__name__)
 
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
 
-
+@AgentRegistry.register("data_collector")
 class DataCollectorAgent:
     """
     Collects raw market data from legal, allowed sources only.

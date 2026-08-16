@@ -2,19 +2,31 @@
 import math
 from typing import Any, Dict, List, Optional
 
+from src.agents.registry import AgentRegistry
+from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.scoring import tiered_score, weighted_average
 from src.utils.validators import validate_score
 
 logger = get_logger(__name__)
 
 
+@AgentRegistry.register("valuation")
 class ValuationAgent:
     """
     Computes relative and absolute valuations.
 
     DCF assumptions are shown explicitly so users can challenge them.
     Always applies a margin of safety (20-40%) per Graham's principle.
+    All thresholds/weights/DCF defaults are sourced from
+    config.scoring.valuation (config/default.yaml).
     """
+
+    def __init__(self, config=None):
+        self.cfg = config or get_config()
+        # Scoring rules always come from the real loaded config, independent of
+        # whatever `config` object the caller injects (see fundamental_agent.py).
+        self.rules = get_config().scoring.valuation
 
     # ------------------------------------------------------------------
     # Ratio calculations
@@ -60,27 +72,34 @@ class ValuationAgent:
     def dcf_intrinsic_value(
         self,
         fcf_cr: float,
-        growth_rate_yr1_5: float = 0.12,
-        growth_rate_yr6_10: float = 0.08,
-        terminal_growth_rate: float = 0.04,
-        discount_rate: float = 0.12,
+        growth_rate_yr1_5: Optional[float] = None,
+        growth_rate_yr6_10: Optional[float] = None,
+        terminal_growth_rate: Optional[float] = None,
+        discount_rate: Optional[float] = None,
         shares_outstanding_cr: float = 1.0,
-        margin_of_safety: float = 0.30,
+        margin_of_safety: Optional[float] = None,
     ) -> Dict[str, Any]:
         """
         Conservative two-stage DCF.
 
         Args:
             fcf_cr: Current free cash flow in crores
-            growth_rate_yr1_5: FCF growth rate years 1-5
-            growth_rate_yr6_10: FCF growth rate years 6-10
-            terminal_growth_rate: Perpetuity growth rate after year 10
-            discount_rate: Required rate of return (WACC)
+            growth_rate_yr1_5: FCF growth rate years 1-5 (defaults from config)
+            growth_rate_yr6_10: FCF growth rate years 6-10 (defaults from config)
+            terminal_growth_rate: Perpetuity growth rate after year 10 (defaults from config)
+            discount_rate: Required rate of return / WACC (defaults from config)
             shares_outstanding_cr: Shares in crores
-            margin_of_safety: Discount applied to intrinsic value
+            margin_of_safety: Discount applied to intrinsic value (defaults from config)
 
         Returns dict with intrinsic_value_per_share, margin_of_safety_applied, assumptions.
         """
+        d = self.rules.dcf_defaults
+        growth_rate_yr1_5 = d.growth_rate_yr1_5 if growth_rate_yr1_5 is None else growth_rate_yr1_5
+        growth_rate_yr6_10 = d.growth_rate_yr6_10 if growth_rate_yr6_10 is None else growth_rate_yr6_10
+        terminal_growth_rate = d.terminal_growth_rate if terminal_growth_rate is None else terminal_growth_rate
+        discount_rate = d.discount_rate if discount_rate is None else discount_rate
+        margin_of_safety = d.margin_of_safety if margin_of_safety is None else margin_of_safety
+
         if fcf_cr <= 0:
             return {
                 "intrinsic_value_per_share": None,
@@ -129,62 +148,34 @@ class ValuationAgent:
 
     def score_pe(self, pe: Optional[float], sector_median_pe: Optional[float] = None) -> float:
         """Graham benchmark: PE < 15 is value territory."""
-        if pe is None:
-            return 5.0
-        if pe <= 10:
-            return 10.0
-        if pe <= 15:
-            return 8.0
-        if pe <= 20:
-            return 6.0
-        if pe <= 30:
-            return 4.0
-        if pe <= 50:
-            return 2.0
-        return 0.0
+        return tiered_score(
+            pe, self.rules.pe_tiers,
+            no_match=self.rules.pe_no_match, if_none=self.rules.pe_if_none, mode="lte",
+        )
 
     def score_pb(self, pb: Optional[float]) -> float:
         """Graham: PB < 1.5 is attractive."""
-        if pb is None:
-            return 5.0
-        if pb <= 1.0:
-            return 10.0
-        if pb <= 1.5:
-            return 8.0
-        if pb <= 3.0:
-            return 5.0
-        if pb <= 5.0:
-            return 3.0
-        return 1.0
+        return tiered_score(
+            pb, self.rules.pb_tiers,
+            no_match=self.rules.pb_no_match, if_none=self.rules.pb_if_none, mode="lte",
+        )
 
     def score_peg(self, peg: Optional[float]) -> float:
         """Lynch: PEG < 1 is undervalued growth."""
-        if peg is None:
-            return 5.0
-        if peg <= 0.5:
-            return 10.0
-        if peg <= 1.0:
-            return 8.0
-        if peg <= 1.5:
-            return 5.0
-        if peg <= 2.0:
-            return 3.0
-        return 1.0
+        return tiered_score(
+            peg, self.rules.peg_tiers,
+            no_match=self.rules.peg_no_match, if_none=self.rules.peg_if_none, mode="lte",
+        )
 
     def score_margin_of_safety(self, current_price: float, intrinsic_value: Optional[float]) -> float:
         """Score based on how far below intrinsic value the stock is trading."""
         if intrinsic_value is None or intrinsic_value <= 0:
-            return 5.0
+            return self.rules.margin_of_safety_if_none
         discount = (intrinsic_value - current_price) / intrinsic_value
-        if discount >= 0.40:
-            return 10.0
-        if discount >= 0.25:
-            return 8.0
-        if discount >= 0.10:
-            return 6.0
-        if discount >= 0:
-            return 4.0
-        return 1.0  # trading above intrinsic value
+        return tiered_score(
+            discount, self.rules.margin_of_safety_tiers,
+            no_match=self.rules.margin_of_safety_no_match,
+        )
 
     def overall_valuation_score(
         self,
@@ -194,13 +185,14 @@ class ValuationAgent:
         current_price: float,
         intrinsic_value: Optional[float],
     ) -> float:
+        w = self.rules.weights
         scores = [
-            (self.score_pe(pe), 0.25),
-            (self.score_pb(pb), 0.25),
-            (self.score_peg(peg), 0.25),
-            (self.score_margin_of_safety(current_price, intrinsic_value), 0.25),
+            (self.score_pe(pe), w["pe"]),
+            (self.score_pb(pb), w["pb"]),
+            (self.score_peg(peg), w["peg"]),
+            (self.score_margin_of_safety(current_price, intrinsic_value), w["margin_of_safety"]),
         ]
-        result = sum(s * w for s, w in scores)
+        result = weighted_average(scores)
         return round(validate_score(result, "valuation_score"), 2)
 
     def analyze(

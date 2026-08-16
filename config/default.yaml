@@ -1,0 +1,210 @@
+# =============================================================
+# Default configuration — Indian Investment Research Wizard
+# =============================================================
+# This file holds every tunable business rule: scoring thresholds, weights,
+# the enrichment-agent pipeline, broker selection, and app-wide text.
+#
+# Secrets (API keys, DB URLs) are NEVER stored here — they stay in `.env` /
+# real environment variables. See docs/configuration.md for the full
+# precedence rules and how to retune a score or add an agent/broker.
+#
+# Per-environment overrides live in config/<APP_ENV>.yaml and are deep-merged
+# on top of this file (APP_ENV defaults to "development").
+
+app:
+  disclaimer: >-
+    This is educational research, not financial advice.
+    Consult a SEBI-registered investment adviser before investing.
+  categories:
+    - id: long_term_compounder
+      name: "Long-term Compounders"
+      description: "High-quality businesses with durable moats"
+    - id: undervalued_value
+      name: "Undervalued Value Stocks"
+      description: "Trading below intrinsic value"
+    - id: turnaround
+      name: "Turnaround Candidates"
+      description: "Recovering from temporary difficulties"
+    - id: dividend_income
+      name: "Dividend / Income Stocks"
+      description: "Steady dividend payers"
+    - id: momentum_risky
+      name: "Momentum (Risky)"
+      description: "Strong momentum but elevated risk"
+    - id: avoid_watchlist
+      name: "Avoid / Watchlist"
+      description: "Red flags present — monitor only"
+
+llm:
+  model: "claude-opus-4-8"
+  max_tokens: 8192
+  # Per-agent max_tokens override for LLM calls (falls back to llm.max_tokens if absent)
+  max_tokens_per_agent:
+    moat: 1024
+    fisher: 1024
+    news: 1024
+    sentiment: 1024
+    unicorn: 1024
+    synthesis: 2048
+
+# Ordered list of independent "enrichment" agents the orchestrator runs for every
+# research report, on top of the mandatory data -> fundamental -> valuation -> risk
+# chain. Remove a name to disable that agent's contribution without touching code;
+# add a new registered agent's name here to include it in the pipeline.
+pipeline:
+  enabled_agents:
+    - moat
+    - news
+    - sentiment
+    - fisher
+    - unicorn
+
+broker:
+  # Which broker connector BrokerAgent uses for live orders. Overridable via
+  # the ACTIVE_BROKER env var. One of: zerodha | upstox | angelone | dhan
+  active_broker: zerodha
+
+scoring:
+  fundamental:
+    weights:
+      roe: 0.30
+      debt_equity: 0.25
+      revenue_cagr: 0.25
+      fcf: 0.20
+    # Each tier is [threshold, score]. gte tiers are checked highest-threshold-first;
+    # lte tiers are checked lowest-threshold-first. See src/utils/scoring.py.
+    roe_tiers: [[0.30, 10.0], [0.20, 8.0], [0.15, 6.0], [0.10, 4.0], [0.0000001, 2.0]]
+    roe_no_match: 0.0
+    roe_if_none: 0.0
+    debt_equity_tiers: [[0, 10.0], [0.5, 8.0], [1.0, 6.0], [2.0, 4.0]]
+    debt_equity_no_match: 1.0
+    debt_equity_if_none: 5.0
+    revenue_cagr_tiers: [[0.20, 10.0], [0.15, 8.0], [0.10, 6.0], [0.05, 4.0], [0.0000001, 2.0]]
+    revenue_cagr_no_match: 0.0
+    revenue_cagr_if_none: 0.0
+    fcf_ratio_tiers: [[0.15, 10.0], [0.10, 8.0], [0.05, 6.0], [0.0000001, 4.0]]
+    fcf_ratio_no_match: 1.0
+
+  valuation:
+    weights:
+      pe: 0.25
+      pb: 0.25
+      peg: 0.25
+      margin_of_safety: 0.25
+    pe_tiers: [[10, 10.0], [15, 8.0], [20, 6.0], [30, 4.0], [50, 2.0]]
+    pe_no_match: 0.0
+    pe_if_none: 5.0
+    pb_tiers: [[1.0, 10.0], [1.5, 8.0], [3.0, 5.0], [5.0, 3.0]]
+    pb_no_match: 1.0
+    pb_if_none: 5.0
+    peg_tiers: [[0.5, 10.0], [1.0, 8.0], [1.5, 5.0], [2.0, 3.0]]
+    peg_no_match: 1.0
+    peg_if_none: 5.0
+    margin_of_safety_tiers: [[0.40, 10.0], [0.25, 8.0], [0.10, 6.0], [0.0, 4.0]]
+    margin_of_safety_no_match: 1.0
+    margin_of_safety_if_none: 5.0
+    dcf_defaults:
+      growth_rate_yr1_5: 0.12
+      growth_rate_yr6_10: 0.08
+      terminal_growth_rate: 0.04
+      discount_rate: 0.12
+      margin_of_safety: 0.30
+
+  risk:
+    high_debt_de_threshold: 2.0
+    overvalued_pe_threshold: 60
+    high_promoter_pledge_pct: 30
+    low_promoter_holding_pct: 35
+    severe_flags: [high_debt, negative_fcf, governance_issue, high_promoter_pledge]
+    severe_flag_points: 2.0
+    normal_flag_points: 1.0
+    debt_penalty_tiers: [[3.0, 2.0], [2.0, 1.0]]
+    risk_label_low_max: 2
+    risk_label_moderate_max: 5
+    red_flag_descriptions:
+      high_debt: "Debt/Equity ratio > 2.0"
+      negative_fcf: "Free cash flow is negative"
+      falling_margins: "EBITDA margin declined 3+ consecutive quarters"
+      high_promoter_pledge: "Promoter pledge > 30% of holding"
+      low_promoter_holding: "Promoter holding < 35%"
+      auditor_change: "Auditor resigned or changed in last 2 years"
+      related_party_transactions: "Significant related-party transactions flagged"
+      sudden_price_spike: "Stock price spiked > 50% in 30 days without fundamental reason"
+      negative_cash_flow_ops: "Operating cash flow is negative"
+      overvalued_pe: "PE ratio > 60"
+      high_capex_low_return: "Capex-to-revenue > 20% with ROCE < 10%"
+      governance_issue: "Governance issue detected (SEBI action, penalty, regulatory notice)"
+
+  moat:
+    weights:
+      brand_power: 0.15
+      switching_cost: 0.20
+      network_effect: 0.15
+      cost_advantage: 0.15
+      regulatory_advantage: 0.10
+      distribution_strength: 0.10
+      management_quality: 0.15
+    fallback_score: 5.0
+
+  fisher:
+    weights:
+      rd_innovation: 0.20
+      sales_organisation: 0.10
+      profit_margins: 0.15
+      management_integrity: 0.15
+      management_vision: 0.20
+      employee_relations: 0.05
+      future_monopoly: 0.15
+    fallback_score: 5.0
+
+  unicorn:
+    weights:
+      market_size_opportunity: 0.20
+      founder_quality: 0.15
+      tech_adoption: 0.15
+      sector_tailwind: 0.15
+      competitive_position: 0.15
+      scalability: 0.10
+      disruption_potential: 0.10
+    small_cap_max_cr: 5000
+    mid_cap_max_cr: 20000
+    ten_x_candidate_threshold: 7.5
+    quant_score_boost_cap: 3.0
+
+  portfolio:
+    max_single_stock_pct:
+      conservative: 5.0
+      moderate: 8.0
+      aggressive: 12.0
+    max_sector_pct:
+      conservative: 15.0
+      moderate: 20.0
+      aggressive: 30.0
+    emergency_fund_min_months: 6
+    eligible_risk_score_max:
+      conservative: 5
+      default: 7
+    non_strong_weight_factor: 0.6
+    composite_weights:
+      financial: 0.3333333333
+      moat: 0.3333333333
+      valuation: 0.3333333333
+      risk_penalty: 0.3
+
+  synthesis:
+    growth_tiers: [[0.20, 10.0], [0.15, 8.0], [0.10, 6.0], [0.05, 4.0]]
+    growth_no_match: 2.0
+    avoid_risk_threshold: 7
+    avoid_confidence: 80.0
+    strong_unicorn_score_threshold: 7.5
+    strong_unicorn_risk_max: 4
+    strong_unicorn_confidence: 78.0
+    strong_core_financial_min: 7
+    strong_core_valuation_min: 6
+    strong_core_moat_min: 6
+    strong_core_risk_max: 3
+    strong_core_confidence: 75.0
+    strong_fisher_score_min: 7
+    strong_fisher_unicorn_min: 6
+    strong_fisher_confidence: 70.0
+    watch_confidence: 55.0

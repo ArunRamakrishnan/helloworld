@@ -4,39 +4,14 @@ from typing import Any, Dict, List, Optional
 
 import anthropic
 
+from src.agents.registry import AgentRegistry
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.prompts import load_prompt
+from src.utils.scoring import weighted_average
 from src.utils.validators import validate_score
 
 logger = get_logger(__name__)
-
-UNICORN_SYSTEM_PROMPT = """You are a venture-capital style equity analyst hunting for "unicorn" opportunities
-in Indian listed equities — small and mid-cap companies with explosive growth potential.
-
-You follow these principles:
-- Small cap with large addressable market = asymmetric upside
-- Founder-led companies outperform over 10+ years
-- Early adoption of new technology = durable competitive advantage
-- Emerging sectors (AI, EV, renewables, defense, specialty chemicals, digital infra)
-  often have multi-decade runways
-
-Evaluate the following unicorn dimensions on a 0-10 scale:
-- market_size_opportunity: how large is the TAM (Total Addressable Market)?
-- founder_quality: is this founder-led? Is leadership skin-in-the-game?
-- tech_adoption: is the company adopting/leveraging new technology?
-- sector_tailwind: is the sector experiencing structural growth?
-- competitive_position: early mover or niche leader?
-- scalability: can revenue grow 5-10x without proportional cost growth?
-- disruption_potential: could this disrupt an incumbent or create a new market?
-
-Respond ONLY as valid JSON with keys matching dimension names (float 0-10), plus:
-- "unicorn_summary": 3-4 sentences on the unicorn thesis
-- "emerging_themes": list of 1-3 themes this company benefits from (e.g. "AI infrastructure", "defense indigenisation")
-- "unicorn_score": overall score 0-10
-- "risk_of_being_early": "High" | "Medium" | "Low"
-- "watch_triggers": list of 2-3 milestones that would confirm the thesis
-
-This is educational research. Not financial advice."""
 
 # Sectors with strong structural tailwinds in India (2024-2030)
 TAILWIND_SECTORS = {
@@ -48,10 +23,13 @@ TAILWIND_SECTORS = {
 }
 
 
+@AgentRegistry.register("unicorn")
 class UnicornDetectorAgent:
     """
     Identifies small-cap, founder-led, emerging-sector stocks with 10x potential.
     Scoring combines quantitative filters + LLM qualitative assessment.
+    Weights/thresholds come from config.scoring.unicorn; the system prompt lives in
+    prompts/system/unicorn.md.
     """
 
     DIMENSIONS = [
@@ -64,22 +42,26 @@ class UnicornDetectorAgent:
         "disruption_potential",
     ]
 
-    WEIGHTS = {
-        "market_size_opportunity": 0.20,
-        "founder_quality": 0.15,
-        "tech_adoption": 0.15,
-        "sector_tailwind": 0.15,
-        "competitive_position": 0.15,
-        "scalability": 0.10,
-        "disruption_potential": 0.10,
-    }
+    output_key = "unicorn"
 
-    # Small/mid cap thresholds (market cap in crores)
-    SMALL_CAP_MAX = 5_000
-    MID_CAP_MAX = 20_000
+    @staticmethod
+    def pipeline_kwargs(ticker: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "business_description": context.get("business_description", ""),
+            "market_cap_cr": context.get("market_cap_cr"),
+            "revenue_cagr": context.get("revenue_cagr_3y"),
+            "profit_cagr": context.get("profit_cagr_3y"),
+            "roe": context.get("roe"),
+            "debt_equity": context.get("debt_equity"),
+            "promoter_holding_pct": context.get("promoter_holding_pct"),
+        }
 
     def __init__(self, config=None):
         self.cfg = config or get_config()
+        # Scoring weights/thresholds always come from the real loaded config,
+        # independent of whatever `config` object the caller injects (see
+        # fundamental_agent.py).
+        self.rules = get_config().scoring.unicorn
         self._client: Optional[anthropic.Anthropic] = None
         if self.cfg.llm.anthropic_api_key:
             self._client = anthropic.Anthropic(api_key=self.cfg.llm.anthropic_api_key)
@@ -95,15 +77,15 @@ class UnicornDetectorAgent:
     ) -> Dict[str, Any]:
         """Run quantitative unicorn filters."""
         size_label = (
-            "small_cap" if market_cap_cr <= self.SMALL_CAP_MAX
-            else "mid_cap" if market_cap_cr <= self.MID_CAP_MAX
+            "small_cap" if market_cap_cr <= self.rules.small_cap_max_cr
+            else "mid_cap" if market_cap_cr <= self.rules.mid_cap_max_cr
             else "large_cap"
         )
 
         flags = []
         score_boost = 0.0
 
-        if market_cap_cr <= self.SMALL_CAP_MAX:
+        if market_cap_cr <= self.rules.small_cap_max_cr:
             flags.append("Small cap — high growth potential")
             score_boost += 1.0
 
@@ -133,7 +115,7 @@ class UnicornDetectorAgent:
         return {
             "size_label": size_label,
             "quant_flags": flags,
-            "quant_score_boost": round(min(score_boost, 3.0), 2),
+            "quant_score_boost": round(min(score_boost, self.rules.quant_score_boost_cap), 2),
         }
 
     def _sector_tailwind_score(self, business_description: str) -> float:
@@ -161,8 +143,8 @@ class UnicornDetectorAgent:
         try:
             message = self._client.messages.create(
                 model=self.cfg.llm.model,
-                max_tokens=1024,
-                system=UNICORN_SYSTEM_PROMPT,
+                max_tokens=self.cfg.llm.max_tokens_for("unicorn"),
+                system=load_prompt("unicorn"),
                 messages=[{"role": "user", "content": user_msg}],
             )
             data = json.loads(message.content[0].text.strip())
@@ -184,7 +166,7 @@ class UnicornDetectorAgent:
         }
 
     def overall_unicorn_score(self, scores: Dict[str, float], quant_boost: float) -> float:
-        base = sum(scores.get(dim, 5.0) * w for dim, w in self.WEIGHTS.items())
+        base = weighted_average([(scores.get(dim, 5.0), w) for dim, w in self.rules.weights.items()])
         return round(validate_score(min(10.0, base + quant_boost * 0.5), "unicorn_score"), 2)
 
     def analyze(
@@ -224,5 +206,5 @@ class UnicornDetectorAgent:
             "quant_flags": quant["quant_flags"],
             "risk_of_being_early": llm_data.get("risk_of_being_early", "Medium"),
             "watch_triggers": llm_data.get("watch_triggers", []),
-            "ten_x_candidate": final_score >= 7.5,
+            "ten_x_candidate": final_score >= self.rules.ten_x_candidate_threshold,
         }
