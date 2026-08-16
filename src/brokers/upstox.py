@@ -1,12 +1,15 @@
 """Upstox API v2 broker integration."""
 from typing import Any, Dict
 
+from src.brokers.base import BrokerConnector
+from src.brokers.factory import BrokerFactory
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-class UpstoxConnector:
+@BrokerFactory.register("upstox")
+class UpstoxConnector(BrokerConnector):
     """
     Wraps the Upstox Python SDK v2.
     Requires: pip install upstox-python-sdk
@@ -14,6 +17,7 @@ class UpstoxConnector:
     """
 
     def __init__(self, broker_config):
+        super().__init__(broker_config)
         self.api_key = broker_config.upstox_api_key
         self.api_secret = broker_config.upstox_api_secret
         self._access_token: str = ""

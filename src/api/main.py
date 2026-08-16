@@ -5,14 +5,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.routes import router
+from src.utils.config import get_config
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
+DISCLAIMER = get_config().disclaimer
 
 
 @asynccontextmanager

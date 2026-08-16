@@ -26,6 +26,10 @@ class FakeLLM:
     anthropic_api_key: str = "fake-key"
     model: str = "claude-opus-4-8"
     max_tokens: int = 8192
+    max_tokens_per_agent: dict = field(default_factory=dict)
+
+    def max_tokens_for(self, agent: str) -> int:
+        return self.max_tokens_per_agent.get(agent, self.max_tokens)
 
 
 @dataclass

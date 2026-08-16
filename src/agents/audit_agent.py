@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from src.agents.registry import AgentRegistry
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -24,6 +25,7 @@ def _get_git_commit_hash() -> str:
         return "unknown"
 
 
+@AgentRegistry.register("audit")
 class AuditAgent:
     """
     Records every significant change to a versioned prompt file and CHANGELOG.

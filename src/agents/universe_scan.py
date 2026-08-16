@@ -29,12 +29,6 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
-
-
 def _score_lynch(report: Dict) -> float:
     """Peter Lynch: PEG < 1, consistent earnings growth, sector leadership."""
     peg = report.get("peg_ratio")
@@ -112,6 +106,9 @@ class UniverseScanOrchestrator:
         self.screener = UniverseScreenerAgent(config=self.cfg)
         self.earnings_agent = QuarterlyEarningsAgent()
         self.orchestrator = Orchestrator(config=self.cfg)
+        # Disclaimer text always comes from the real loaded config (see
+        # fundamental_agent.py).
+        self.disclaimer = get_config().disclaimer
 
     def run(
         self,
@@ -293,7 +290,7 @@ class UniverseScanOrchestrator:
                 "TODO: Add Screener.in API for richer fundamental data. "
                 "TODO: Add Trendlyne API for consensus estimates and institutional holding trends."
             ),
-            "disclaimer": DISCLAIMER,
+            "disclaimer": self.disclaimer,
         }
 
         logger.info(

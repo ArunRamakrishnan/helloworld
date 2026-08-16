@@ -2,7 +2,10 @@
 import math
 from typing import Any, Dict, List, Optional
 
+from src.agents.registry import AgentRegistry
+from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.scoring import tiered_score, weighted_average
 from src.utils.validators import validate_score
 
 logger = get_logger(__name__)
@@ -15,6 +18,7 @@ def _cagr(start: float, end: float, years: int) -> Optional[float]:
     return (end / start) ** (1 / years) - 1
 
 
+@AgentRegistry.register("fundamental")
 class FundamentalAgent:
     """
     Calculates:
@@ -29,7 +33,18 @@ class FundamentalAgent:
     - Dividend history
 
     Scoring: all scores are /10, with 10 being the best.
+    All thresholds/weights are sourced from config.scoring.fundamental
+    (config/default.yaml) rather than hardcoded, so they can be retuned
+    without a code change.
     """
+
+    def __init__(self, config=None):
+        self.cfg = config or get_config()
+        # Scoring rules always come from the real loaded config (config/default.yaml
+        # + env overrides), even if a test/caller injects a mock `config` for other
+        # purposes (e.g. to stub out LLM credentials) — business rules aren't mockable
+        # per-call, only tunable via config/*.yaml.
+        self.rules = get_config().scoring.fundamental
 
     # ------------------------------------------------------------------
     # CAGR calculations
@@ -95,64 +110,32 @@ class FundamentalAgent:
 
     def score_roe(self, roe: Optional[float]) -> float:
         """Score ROE: Buffett likes ROE > 15% consistently."""
-        if roe is None:
-            return 0.0
-        if roe >= 0.30:
-            return 10.0
-        if roe >= 0.20:
-            return 8.0
-        if roe >= 0.15:
-            return 6.0
-        if roe >= 0.10:
-            return 4.0
-        if roe > 0:
-            return 2.0
-        return 0.0
+        return tiered_score(
+            roe, self.rules.roe_tiers,
+            no_match=self.rules.roe_no_match, if_none=self.rules.roe_if_none,
+        )
 
     def score_debt_equity(self, de: Optional[float]) -> float:
         """Score D/E: Graham prefers D/E < 0.5; high debt is risky."""
-        if de is None:
-            return 5.0
-        if de <= 0:
-            return 10.0
-        if de <= 0.5:
-            return 8.0
-        if de <= 1.0:
-            return 6.0
-        if de <= 2.0:
-            return 4.0
-        return 1.0
+        return tiered_score(
+            de, self.rules.debt_equity_tiers,
+            no_match=self.rules.debt_equity_no_match, if_none=self.rules.debt_equity_if_none,
+            mode="lte",
+        )
 
     def score_revenue_cagr(self, cagr: Optional[float]) -> float:
         """Score revenue CAGR: Lynch likes consistent 15%+ growth."""
-        if cagr is None:
-            return 0.0
-        if cagr >= 0.20:
-            return 10.0
-        if cagr >= 0.15:
-            return 8.0
-        if cagr >= 0.10:
-            return 6.0
-        if cagr >= 0.05:
-            return 4.0
-        if cagr > 0:
-            return 2.0
-        return 0.0
+        return tiered_score(
+            cagr, self.rules.revenue_cagr_tiers,
+            no_match=self.rules.revenue_cagr_no_match, if_none=self.rules.revenue_cagr_if_none,
+        )
 
     def score_fcf(self, fcf: float, revenue_cr: float) -> float:
         """Score FCF as % of revenue — positive FCF is a quality sign."""
         if revenue_cr <= 0:
             return 0.0
         ratio = fcf / revenue_cr
-        if ratio >= 0.15:
-            return 10.0
-        if ratio >= 0.10:
-            return 8.0
-        if ratio >= 0.05:
-            return 6.0
-        if ratio > 0:
-            return 4.0
-        return 1.0
+        return tiered_score(ratio, self.rules.fcf_ratio_tiers, no_match=self.rules.fcf_ratio_no_match)
 
     def overall_financial_strength_score(
         self,
@@ -163,13 +146,14 @@ class FundamentalAgent:
         revenue_cr: float,
     ) -> float:
         """Weighted average of sub-scores, /10."""
+        w = self.rules.weights
         scores = [
-            (self.score_roe(roe), 0.30),
-            (self.score_debt_equity(de), 0.25),
-            (self.score_revenue_cagr(rev_cagr), 0.25),
-            (self.score_fcf(fcf, revenue_cr), 0.20),
+            (self.score_roe(roe), w["roe"]),
+            (self.score_debt_equity(de), w["debt_equity"]),
+            (self.score_revenue_cagr(rev_cagr), w["revenue_cagr"]),
+            (self.score_fcf(fcf, revenue_cr), w["fcf"]),
         ]
-        result = sum(s * w for s, w in scores)
+        result = weighted_average(scores)
         return round(validate_score(result, "financial_strength_score"), 2)
 
     def analyze(self, ticker: str, statements: List[Dict[str, Any]]) -> Dict[str, Any]:

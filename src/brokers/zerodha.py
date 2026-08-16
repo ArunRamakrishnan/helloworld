@@ -1,12 +1,15 @@
 """Zerodha Kite Connect broker integration."""
 from typing import Any, Dict, Optional
 
+from src.brokers.base import BrokerConnector
+from src.brokers.factory import BrokerFactory
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
-class ZerodhaConnector:
+@BrokerFactory.register("zerodha")
+class ZerodhaConnector(BrokerConnector):
     """
     Wraps the Kite Connect Python SDK.
     Requires: pip install kiteconnect
@@ -14,6 +17,7 @@ class ZerodhaConnector:
     """
 
     def __init__(self, broker_config):
+        super().__init__(broker_config)
         self.api_key = broker_config.zerodha_api_key
         self.api_secret = broker_config.zerodha_api_secret
         self._kite = None

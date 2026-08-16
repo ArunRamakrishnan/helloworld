@@ -22,10 +22,7 @@ logger = get_logger(__name__)
 router = APIRouter()
 cfg = get_config()
 
-DISCLAIMER = (
-    "This is educational research, not financial advice. "
-    "Consult a SEBI-registered investment adviser before investing."
-)
+DISCLAIMER = cfg.disclaimer
 
 
 # ------------------------------------------------------------------
@@ -153,14 +150,7 @@ def suggest_portfolio(
 @router.get("/categories", summary="List all stock categories")
 def list_categories() -> Dict[str, Any]:
     return {
-        "categories": [
-            {"id": "long_term_compounder", "name": "Long-term Compounders", "description": "High-quality businesses with durable moats"},
-            {"id": "undervalued_value", "name": "Undervalued Value Stocks", "description": "Trading below intrinsic value"},
-            {"id": "turnaround", "name": "Turnaround Candidates", "description": "Recovering from temporary difficulties"},
-            {"id": "dividend_income", "name": "Dividend / Income Stocks", "description": "Steady dividend payers"},
-            {"id": "momentum_risky", "name": "Momentum (Risky)", "description": "Strong momentum but elevated risk"},
-            {"id": "avoid_watchlist", "name": "Avoid / Watchlist", "description": "Red flags present — monitor only"},
-        ],
+        "categories": [c.model_dump() for c in cfg.categories],
         "disclaimer": DISCLAIMER,
     }
 

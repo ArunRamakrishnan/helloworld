@@ -3,8 +3,11 @@ from typing import Any, Dict, List, Optional
 
 import anthropic
 
+from src.agents.registry import AgentRegistry
 from src.utils.config import get_config
 from src.utils.logger import get_logger
+from src.utils.prompts import load_prompt
+from src.utils.scoring import weighted_average
 from src.utils.validators import validate_score
 
 logger = get_logger(__name__)
@@ -19,30 +22,27 @@ MOAT_DIMENSIONS = [
     "management_quality",
 ]
 
-MOAT_SYSTEM_PROMPT = """You are a senior investment analyst evaluating economic moats.
-Score the following moat dimensions for the given company on a 0-10 scale:
-- brand_power: strength of brand in pricing power and customer loyalty
-- switching_cost: how hard it is for customers to leave
-- network_effect: does the product get better as more people use it?
-- cost_advantage: structural cost leadership vs peers
-- regulatory_advantage: licenses, patents, government protection
-- distribution_strength: reach and exclusivity of distribution channels
-- management_quality: capital allocation track record, governance, integrity
 
-Respond ONLY as valid JSON with keys matching the dimension names above, each mapped to a float 0-10.
-Add a "summary" key with 2-3 sentences explaining the moat.
-Do not include any other text outside the JSON.
-This is educational research. Disclaimer: Not financial advice."""
-
-
+@AgentRegistry.register("moat")
 class MoatAgent:
     """
     Uses Claude LLM to evaluate moat dimensions.
     Falls back to a rule-based score if LLM is not available.
+    Dimension weights come from config.scoring.moat; the system prompt lives in
+    prompts/system/moat.md.
     """
+
+    output_key = "moat"
+
+    @staticmethod
+    def pipeline_kwargs(ticker: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        return {"business_description": context.get("business_description", "")}
 
     def __init__(self, config=None):
         self.cfg = config or get_config()
+        # Scoring rules always come from the real loaded config, independent of
+        # whatever `config` object the caller injects (see fundamental_agent.py).
+        self.rules = get_config().scoring.moat
         self._client: Optional[anthropic.Anthropic] = None
         if self.cfg.llm.anthropic_api_key:
             self._client = anthropic.Anthropic(api_key=self.cfg.llm.anthropic_api_key)
@@ -60,8 +60,8 @@ class MoatAgent:
         try:
             message = self._client.messages.create(
                 model=self.cfg.llm.model,
-                max_tokens=1024,
-                system=MOAT_SYSTEM_PROMPT,
+                max_tokens=self.cfg.llm.max_tokens_for("moat"),
+                system=load_prompt("moat"),
                 messages=[{"role": "user", "content": user_msg}],
             )
             import json
@@ -74,20 +74,13 @@ class MoatAgent:
             return self._fallback_score(ticker)
 
     def _fallback_score(self, ticker: str) -> Dict[str, Any]:
-        """Returns a neutral 5/10 across all dimensions when LLM is unavailable."""
-        return {dim: 5.0 for dim in MOAT_DIMENSIONS} | {"summary": "Moat analysis unavailable — LLM not configured."}
+        """Returns a neutral score across all dimensions when LLM is unavailable."""
+        fallback = self.rules.fallback_score
+        return {dim: fallback for dim in MOAT_DIMENSIONS} | {"summary": "Moat analysis unavailable — LLM not configured."}
 
     def overall_moat_score(self, scores: Dict[str, float]) -> float:
-        weights = {
-            "brand_power": 0.15,
-            "switching_cost": 0.20,
-            "network_effect": 0.15,
-            "cost_advantage": 0.15,
-            "regulatory_advantage": 0.10,
-            "distribution_strength": 0.10,
-            "management_quality": 0.15,
-        }
-        total = sum(scores.get(dim, 5.0) * w for dim, w in weights.items())
+        fallback = self.rules.fallback_score
+        total = weighted_average([(scores.get(dim, fallback), w) for dim, w in self.rules.weights.items()])
         return round(validate_score(total, "moat_score"), 2)
 
     def analyze(self, ticker: str, business_description: str) -> Dict[str, Any]:
@@ -96,7 +89,7 @@ class MoatAgent:
         moat_score = self.overall_moat_score(dimension_scores)
         return {
             "ticker": ticker,
-            "dimension_scores": {d: dimension_scores.get(d, 5.0) for d in MOAT_DIMENSIONS},
+            "dimension_scores": {d: dimension_scores.get(d, self.rules.fallback_score) for d in MOAT_DIMENSIONS},
             "moat_summary": dimension_scores.get("summary", ""),
             "moat_score": moat_score,
         }
